@@ -83,8 +83,8 @@ datosT$clasificacion <- factor(datosT$clasificacion)
 
 ```{r}
 datosT$clasificacion
-precio <- data.frame(dummy(datosT$clasificacion))
-# precio
+precio <- dummy(datosT$clasificacion)
+precio
 ```
 
 
