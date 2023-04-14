@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>MD_HDT6</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="MD_HDT6_files/libs/clipboard/clipboard.min.js"></script>
+<script src="MD_HDT6_files/libs/quarto-html/quarto.js"></script>
+<script src="MD_HDT6_files/libs/quarto-html/popper.min.js"></script>
+<script src="MD_HDT6_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="MD_HDT6_files/libs/quarto-html/anchor.min.js"></script>
+<link href="MD_HDT6_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="MD_HDT6_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="MD_HDT6_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="MD_HDT6_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="MD_HDT6_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">MD_HDT6</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"train.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="dvisión-de-variables-numéricas-y-obtención-de-data-de-prueba-y-entrenamiento" class="level2">
+<h2 class="anchored" data-anchor-id="dvisión-de-variables-numéricas-y-obtención-de-data-de-prueba-y-entrenamiento">1. Dvisión de variables numéricas y obtención de data de prueba y entrenamiento</h2>
+<section id="división-de-variables" class="level3">
+<h3 class="anchored" data-anchor-id="división-de-variables">1.1 División de variables</h3>
+<div class="cell">
+
+</div>
+</section>
+<section id="data-de-entrenamiento-y-de-prueba" class="level3">
+<h3 class="anchored" data-anchor-id="data-de-entrenamiento-y-de-prueba">1.2 Data de entrenamiento y de prueba</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos), <span class="fu">nrow</span>(datos) <span class="sc">*</span> porcentaje)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos[corte, ]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creación-de-árbol-de-clasificación-de-la-nueva-varibale" class="level3">
+<h3 class="anchored" data-anchor-id="creación-de-árbol-de-clasificación-de-la-nueva-varibale">1.3 Creación de árbol de clasificación de la nueva varibale</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p33 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.33</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>p66 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.66</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>datosT <span class="ot">&lt;-</span> datos</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>datosT <span class="ot">&lt;-</span> datosT <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">clasificacion =</span> <span class="fu">ifelse</span>(datosT<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p33, <span class="st">"Economicas"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ifelse</span>(datosT<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p66, <span class="st">"Intermedias"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Caras"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>datosT<span class="sc">$</span>clasificacion <span class="ot">&lt;-</span> <span class="fu">factor</span>(datosT<span class="sc">$</span>clasificacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creación-de-variables-dicotómicas" class="level3">
+<h3 class="anchored" data-anchor-id="creación-de-variables-dicotómicas">Creación de variables dicotómicas</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datosT<span class="sc">$</span>clasificacion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   [1] Caras       Intermedias Caras       Intermedias Caras       Intermedias
+   [7] Caras       Economicas  Economicas  Economicas  Caras       Caras      
+  [13] Economicas  Economicas  Intermedias Intermedias Caras       Intermedias
+  [19] Caras       Economicas  Caras       Economicas  Caras       Caras      
+  [25] Economicas  Economicas  Intermedias Intermedias Caras       Caras      
+  [31] Intermedias Intermedias Economicas  Economicas  Intermedias Intermedias
+  [37] Intermedias Caras       Caras       Caras       Economicas  Economicas 
+  [43] Economicas  Economicas  Caras       Economicas  Intermedias Intermedias
+  [49] Caras       Caras       Economicas  Intermedias Economicas  Caras      
+  [55] Intermedias Caras       Caras       Economicas  Caras       Caras      
+  [61] Economicas  Intermedias Intermedias Economicas  Economicas  Economicas 
+  [67] Intermedias Economicas  Caras       Intermedias Caras       Economicas 
+  [73] Caras       Intermedias Intermedias Economicas  Economicas  Economicas 
+  [79] Economicas  Intermedias Economicas  Caras       Caras       Economicas 
+  [85] Economicas  Economicas  Intermedias Economicas  Caras       Caras      
+  [91] Economicas  Economicas  Economicas  Caras       Intermedias Caras      
+  [97] Caras       Intermedias Intermedias Caras       Intermedias Economicas 
+ [103] Intermedias Intermedias Intermedias Economicas  Economicas  Intermedias
+ [109] Intermedias Caras       Intermedias Intermedias Intermedias Intermedias
+ [115] Caras       Caras       Economicas  Caras       Intermedias Caras      
+ [121] Economicas  Economicas  Economicas  Intermedias Economicas  Caras      
+ [127] Economicas  Economicas  Economicas  Caras       Caras       Caras      
+ [133] Caras       Caras       Economicas  Intermedias Economicas  Caras      
+ [139] Intermedias Caras       Caras       Intermedias Intermedias Caras      
+ [145] Caras       Caras       Economicas  Caras       Economicas  Caras      
+ [151] Economicas  Caras       Economicas  Intermedias Caras       Caras      
+ [157] Caras       Economicas  Economicas  Intermedias Caras       Caras      
+ [163] Economicas  Caras       Intermedias Intermedias Economicas  Economicas 
+ [169] Intermedias Intermedias Intermedias Economicas  Intermedias Caras      
+ [175] Intermedias Economicas  Caras       Economicas  Intermedias Caras      
+ [181] Intermedias Economicas  Caras       Economicas  Caras       Economicas 
+ [187] Economicas  Caras       Intermedias Caras       Economicas  Economicas 
+ [193] Economicas  Intermedias Caras       Economicas  Caras       Economicas 
+ [199] Economicas  Economicas  Caras       Intermedias Intermedias Intermedias
+ [205] Economicas  Caras       Intermedias Intermedias Intermedias Caras      
+ [211] Caras       Caras       Caras       Economicas  Intermedias Caras      
+ [217] Intermedias Economicas  Economicas  Intermedias Intermedias Intermedias
+ [223] Economicas  Caras       Caras       Caras       Intermedias Economicas 
+ [229] Caras       Caras       Intermedias Caras       Caras       Caras      
+ [235] Intermedias Caras       Caras       Intermedias Intermedias Intermedias
+ [241] Intermedias Caras       Intermedias Economicas  Intermedias Intermedias
+ [247] Intermedias Caras       Intermedias Intermedias Intermedias Caras      
+ [253] Caras       Intermedias Caras       Caras       Caras       Caras      
+ [259] Economicas  Economicas  Caras       Intermedias Intermedias Caras      
+ [265] Caras       Caras       Caras       Caras       Caras       Economicas 
+ [271] Caras       Economicas  Caras       Intermedias Economicas  Intermedias
+ [277] Caras       Caras       Caras       Caras       Caras       Caras      
+ [283] Intermedias Caras       Economicas  Caras       Economicas  Intermedias
+ [289] Intermedias Caras       Caras       Economicas  Economicas  Intermedias
+ [295] Intermedias Economicas  Economicas  Caras       Caras       Economicas 
+ [301] Intermedias Intermedias Economicas  Economicas  Economicas  Economicas 
+ [307] Caras       Intermedias Caras       Caras       Intermedias Economicas 
+ [313] Intermedias Caras       Economicas  Caras       Economicas  Economicas 
+ [319] Caras       Caras       Economicas  Caras       Economicas  Economicas 
+ [325] Economicas  Intermedias Economicas  Caras       Caras       Intermedias
+ [331] Economicas  Caras       Economicas  Intermedias Caras       Caras      
+ [337] Economicas  Intermedias Economicas  Caras       Intermedias Intermedias
+ [343] Caras       Economicas  Intermedias Caras       Economicas  Caras      
+ [349] Intermedias Economicas  Economicas  Caras       Intermedias Economicas 
+ [355] Economicas  Economicas  Intermedias Economicas  Caras       Economicas 
+ [361] Economicas  Economicas  Economicas  Caras       Economicas  Intermedias
+ [367] Intermedias Caras       Economicas  Caras       Economicas  Economicas 
+ [373] Economicas  Caras       Caras       Intermedias Intermedias Economicas 
+ [379] Caras       Intermedias Economicas  Intermedias Economicas  Intermedias
+ [385] Intermedias Caras       Intermedias Caras       Intermedias Caras      
+ [391] Caras       Economicas  Caras       Caras       Caras       Economicas 
+ [397] Caras       Caras       Intermedias Intermedias Intermedias Intermedias
+ [403] Intermedias Intermedias Economicas  Economicas  Intermedias Intermedias
+ [409] Economicas  Economicas  Intermedias Economicas  Economicas  Economicas 
+ [415] Caras       Intermedias Caras       Intermedias Economicas  Caras      
+ [421] Caras       Intermedias Economicas  Intermedias Caras       Economicas 
+ [427] Economicas  Economicas  Caras       Caras       Caras       Economicas 
+ [433] Intermedias Intermedias Intermedias Caras       Intermedias Economicas 
+ [439] Caras       Economicas  Intermedias Economicas  Economicas  Economicas 
+ [445] Intermedias Economicas  Intermedias Caras       Caras       Economicas 
+ [451] Intermedias Caras       Economicas  Economicas  Caras       Intermedias
+ [457] Economicas  Caras       Economicas  Caras       Economicas  Intermedias
+ [463] Economicas  Intermedias Intermedias Economicas  Intermedias Economicas 
+ [469] Caras       Caras       Caras       Intermedias Economicas  Caras      
+ [475] Intermedias Intermedias Economicas  Intermedias Intermedias Intermedias
+ [481] Economicas  Caras       Economicas  Caras       Economicas  Caras      
+ [487] Economicas  Intermedias Intermedias Economicas  Intermedias Caras      
+ [493] Intermedias Economicas  Caras       Economicas  Caras       Caras      
+ [499] Intermedias Caras       Intermedias Caras       Intermedias Caras      
+ [505] Caras       Intermedias Caras       Caras       Economicas  Intermedias
+ [511] Economicas  Intermedias Economicas  Caras       Caras       Economicas 
+ [517] Caras       Economicas  Intermedias Intermedias Intermedias Economicas 
+ [523] Intermedias Economicas  Caras       Economicas  Intermedias Intermedias
+ [529] Caras       Economicas  Economicas  Economicas  Caras       Caras      
+ [535] Caras       Intermedias Caras       Economicas  Intermedias Intermedias
+ [541] Economicas  Economicas  Caras       Economicas  Caras       Economicas 
+ [547] Intermedias Intermedias Economicas  Intermedias Caras       Economicas 
+ [553] Intermedias Caras       Caras       Caras       Intermedias Intermedias
+ [559] Economicas  Caras       Intermedias Intermedias Economicas  Economicas 
+ [565] Caras       Intermedias Intermedias Caras       Caras       Caras      
+ [571] Caras       Caras       Caras       Caras       Economicas  Intermedias
+ [577] Intermedias Economicas  Economicas  Intermedias Caras       Caras      
+ [583] Intermedias Caras       Intermedias Caras       Economicas  Caras      
+ [589] Intermedias Economicas  Economicas  Caras       Economicas  Intermedias
+ [595] Intermedias Intermedias Caras       Economicas  Economicas  Economicas 
+ [601] Caras       Economicas  Caras       Economicas  Economicas  Caras      
+ [607] Intermedias Caras       Economicas  Intermedias Economicas  Caras      
+ [613] Intermedias Caras       Economicas  Intermedias Intermedias Intermedias
+ [619] Intermedias Caras       Caras       Economicas  Economicas  Caras      
+ [625] Caras       Intermedias Intermedias Caras       Intermedias Caras      
+ [631] Economicas  Economicas  Caras       Caras       Caras       Caras      
+ [637] Caras       Intermedias Caras       Caras       Economicas  Economicas 
+ [643] Economicas  Caras       Intermedias Caras       Intermedias Intermedias
+ [649] Economicas  Intermedias Intermedias Intermedias Economicas  Intermedias
+ [655] Caras       Economicas  Intermedias Caras       Caras       Intermedias
+ [661] Intermedias Economicas  Caras       Intermedias Caras       Economicas 
+ [667] Caras       Caras       Economicas  Caras       Economicas  Caras      
+ [673] Intermedias Economicas  Intermedias Economicas  Intermedias Economicas 
+ [679] Caras       Intermedias Caras       Intermedias Economicas  Intermedias
+ [685] Caras       Caras       Economicas  Caras       Intermedias Intermedias
+ [691] Intermedias Caras       Intermedias Intermedias Economicas  Intermedias
+ [697] Economicas  Intermedias Economicas  Intermedias Intermedias Intermedias
+ [703] Intermedias Caras       Economicas  Caras       Intermedias Economicas 
+ [709] Intermedias Intermedias Intermedias Intermedias Caras       Economicas 
+ [715] Intermedias Economicas  Caras       Caras       Economicas  Caras      
+ [721] Economicas  Caras       Economicas  Economicas  Economicas  Caras      
+ [727] Economicas  Caras       Intermedias Intermedias Intermedias Economicas 
+ [733] Economicas  Caras       Intermedias Economicas  Caras       Intermedias
+ [739] Economicas  Intermedias Intermedias Economicas  Intermedias Economicas 
+ [745] Intermedias Caras       Economicas  Intermedias Intermedias Caras      
+ [751] Economicas  Caras       Caras       Intermedias Intermedias Economicas 
+ [757] Intermedias Intermedias Economicas  Economicas  Caras       Intermedias
+ [763] Caras       Intermedias Intermedias Caras       Caras       Caras      
+ [769] Caras       Economicas  Caras       Caras       Caras       Economicas 
+ [775] Caras       Caras       Intermedias Intermedias Intermedias Economicas 
+ [781] Intermedias Caras       Caras       Caras       Economicas  Economicas 
+ [787] Economicas  Economicas  Intermedias Economicas  Economicas  Intermedias
+ [793] Intermedias Economicas  Intermedias Caras       Caras       Intermedias
+ [799] Intermedias Economicas  Intermedias Economicas  Intermedias Economicas 
+ [805] Intermedias Economicas  Economicas  Intermedias Caras       Intermedias
+ [811] Economicas  Economicas  Economicas  Caras       Caras       Caras      
+ [817] Intermedias Intermedias Intermedias Caras       Economicas  Economicas 
+ [823] Caras       Economicas  Economicas  Caras       Intermedias Intermedias
+ [829] Economicas  Caras       Economicas  Economicas  Economicas  Intermedias
+ [835] Economicas  Economicas  Caras       Caras       Caras       Intermedias
+ [841] Caras       Economicas  Caras       Economicas  Intermedias Caras      
+ [847] Economicas  Economicas  Caras       Economicas  Caras       Economicas 
+ [853] Economicas  Intermedias Caras       Caras       Caras       Caras      
+ [859] Intermedias Economicas  Economicas  Intermedias Caras       Intermedias
+ [865] Intermedias Caras       Intermedias Intermedias Caras       Caras      
+ [871] Economicas  Economicas  Economicas  Caras       Intermedias Intermedias
+ [877] Intermedias Economicas  Economicas  Intermedias Economicas  Intermedias
+ [883] Caras       Caras       Intermedias Intermedias Economicas  Intermedias
+ [889] Economicas  Caras       Intermedias Intermedias Caras       Intermedias
+ [895] Caras       Economicas  Intermedias Intermedias Intermedias Economicas 
+ [901] Intermedias Economicas  Economicas  Intermedias Economicas  Economicas 
+ [907] Economicas  Intermedias Economicas  Caras       Intermedias Caras      
+ [913] Caras       Caras       Economicas  Economicas  Economicas  Caras      
+ [919] Economicas  Intermedias Economicas  Economicas  Caras       Economicas 
+ [925] Economicas  Intermedias Caras       Caras       Intermedias Economicas 
+ [931] Economicas  Economicas  Caras       Intermedias Economicas  Economicas 
+ [937] Economicas  Intermedias Intermedias Caras       Economicas  Intermedias
+ [943] Intermedias Intermedias Economicas  Intermedias Caras       Caras      
+ [949] Intermedias Caras       Caras       Intermedias Intermedias Economicas 
+ [955] Economicas  Caras       Caras       Intermedias Caras       Caras      
+ [961] Intermedias Intermedias Intermedias Caras       Caras       Caras      
+ [967] Economicas  Intermedias Economicas  Caras       Caras       Economicas 
+ [973] Intermedias Economicas  Economicas  Caras       Caras       Caras      
+ [979] Intermedias Economicas  Intermedias Intermedias Caras       Intermedias
+ [985] Intermedias Intermedias Economicas  Caras       Economicas  Caras      
+ [991] Intermedias Caras       Caras       Intermedias Caras       Caras      
+ [997] Intermedias Economicas  Economicas  Economicas  Economicas  Caras      
+[1003] Economicas  Economicas  Economicas  Economicas  Intermedias Intermedias
+[1009] Intermedias Intermedias Caras       Intermedias Caras       Economicas 
+[1015] Economicas  Economicas  Economicas  Intermedias Intermedias Caras      
+[1021] Intermedias Caras       Caras       Caras       Intermedias Intermedias
+[1027] Intermedias Economicas  Economicas  Caras       Economicas  Intermedias
+[1033] Economicas  Caras       Economicas  Caras       Intermedias Economicas 
+[1039] Intermedias Intermedias Intermedias Economicas  Caras       Intermedias
+[1045] Intermedias Intermedias Intermedias Economicas  Caras       Intermedias
+[1051] Intermedias Intermedias Intermedias Economicas  Caras       Caras      
+[1057] Economicas  Economicas  Intermedias Economicas  Intermedias Intermedias
+[1063] Intermedias Intermedias Intermedias Caras       Caras       Economicas 
+[1069] Caras       Caras       Intermedias Intermedias Caras       Caras      
+[1075] Caras       Economicas  Caras       Caras       Caras       Economicas 
+[1081] Intermedias Caras       Economicas  Intermedias Economicas  Economicas 
+[1087] Economicas  Caras       Intermedias Caras       Economicas  Economicas 
+[1093] Economicas  Economicas  Intermedias Economicas  Economicas  Caras      
+[1099] Economicas  Economicas  Intermedias Intermedias Intermedias Economicas 
+[1105] Caras       Economicas  Caras       Intermedias Economicas  Caras      
+[1111] Intermedias Caras       Caras       Caras       Intermedias Intermedias
+[1117] Caras       Economicas  Caras       Economicas  Intermedias Caras      
+[1123] Caras       Caras       Economicas  Economicas  Economicas  Intermedias
+[1129] Economicas  Intermedias Economicas  Economicas  Caras       Intermedias
+[1135] Caras       Economicas  Caras       Economicas  Economicas  Intermedias
+[1141] Caras       Caras       Intermedias Intermedias Intermedias Economicas 
+[1147] Caras       Caras       Caras       Economicas  Caras       Economicas 
+[1153] Economicas  Caras       Caras       Intermedias Economicas  Caras      
+[1159] Caras       Intermedias Economicas  Economicas  Intermedias Economicas 
+[1165] Intermedias Intermedias Caras       Intermedias Economicas  Caras      
+[1171] Economicas  Intermedias Intermedias Intermedias Economicas  Caras      
+[1177] Intermedias Caras       Caras       Caras       Intermedias Economicas 
+[1183] Caras       Economicas  Economicas  Intermedias Caras       Intermedias
+[1189] Economicas  Intermedias Intermedias Caras       Caras       Intermedias
+[1195] Intermedias
+Levels: Caras Economicas Intermedias</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># precio &lt;- data.frame(dummy(datosT$clasificacion))</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># precio</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="árbol-de-clasificación" class="level2">
+<h2 class="anchored" data-anchor-id="árbol-de-clasificación">5. Árbol de clasificación</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datosT), <span class="fu">nrow</span>(datosT) <span class="sc">*</span> porcentaje)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datosT[corte, ]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datosT[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">subset</span>(train, <span class="at">select =</span> <span class="sc">-</span>SalePrice)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>multi_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"TotalBsmtSF"</span>,<span class="st">"HouseStyle"</span>,<span class="st">"BsmtQual"</span>,<span class="st">"Neighborhood"</span>, <span class="st">"clasificacion"</span>, <span class="st">"MiscFeature"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> train[, multi_variables]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>new_decision_tree <span class="ot">&lt;-</span> <span class="fu">rpart</span>(<span class="at">formula =</span> clasificacion <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"class"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(new_decision_tree, <span class="at">box.palette =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y2pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(new_decision_tree, <span class="at">newdata =</span> test)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>y2pred<span class="ot">&lt;-</span><span class="fu">apply</span>(y2pred, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="fu">colnames</span>(y2pred)[<span class="fu">which.max</span>(x)])</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>y2pred <span class="ot">&lt;-</span> <span class="fu">factor</span>(y2pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="métrica-de-desempeño-del-árbol" class="level3">
+<h3 class="anchored" data-anchor-id="métrica-de-desempeño-del-árbol">5.3 Métrica de desempeño del árbol</h3>
+<p>Se decidió usar recall, porque se consideró que era más costoso identificar una casa cara como barata por sus implicaciones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">&lt;-</span> <span class="fu">table</span>(test<span class="sc">$</span>clasificacion, y2pred)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>tp <span class="ot">&lt;-</span> cm[<span class="dv">2</span>, <span class="dv">2</span>]  <span class="co"># true positives Casa este etiquetada bien cara / cara</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>tn <span class="ot">&lt;-</span> cm[<span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># true negatives Casa esta etiquetada bien barata / barata</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> cm[<span class="dv">1</span>, <span class="dv">2</span>]  <span class="co"># false positives Casa etiquetada como cara / barata</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> cm[<span class="dv">2</span>, <span class="dv">1</span>]  <span class="co"># false negatives Casa etiquetada como barata / cara</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>recall <span class="ot">&lt;-</span> tp <span class="sc">/</span> (tp <span class="sc">+</span> fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>El recall del árbol de clasificación inicial es 0.9896907. Esto nos indica que el modelo es un buen identificador casos positivos, pero aun puede que no sea muy bueno para identificar falsos positivos. Esto puede causar que casas que son baratas sean clasificadas como caras y no se lleguen a vender. Pero también indica que es poco probable que clasifiquen casas caras como baratas, evitando desinformación.</p>
+</section>
+<section id="matriz-de-confusión" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-de-confusión">5.3 Matriz de confusión</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>confusion_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="at">reference =</span> test<span class="sc">$</span>clasificacion, <span class="at">data =</span> y2pred)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>confusion_matrix<span class="sc">$</span>table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Reference
+Prediction    Caras Economicas Intermedias
+  Caras         103          1          16
+  Economicas      0         96          20
+  Intermedias    19         24          80</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cm<span class="ot">&lt;-</span>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(y2pred,test<span class="sc">$</span>clasificacion)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>cm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+             Reference
+Prediction    Caras Economicas Intermedias
+  Caras         103          1          16
+  Economicas      0         96          20
+  Intermedias    19         24          80
+
+Overall Statistics
+                                          
+               Accuracy : 0.7772          
+                 95% CI : (0.7305, 0.8192)
+    No Information Rate : 0.3398          
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.6658          
+                                          
+ Mcnemar's Test P-Value : 0.6547          
+
+Statistics by Class:
+
+                     Class: Caras Class: Economicas Class: Intermedias
+Sensitivity                0.8443            0.7934             0.6897
+Specificity                0.9283            0.9160             0.8230
+Pos Pred Value             0.8583            0.8276             0.6504
+Neg Pred Value             0.9205            0.8971             0.8475
+Prevalence                 0.3398            0.3370             0.3231
+Detection Rate             0.2869            0.2674             0.2228
+Detection Prevalence       0.3343            0.3231             0.3426
+Balanced Accuracy          0.8863            0.8547             0.7564</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="naive-bayes" class="level2">
+<h2 class="anchored" data-anchor-id="naive-bayes">6. Naive Bayes</h2>
+<section id="regresión" class="level3">
+<h3 class="anchored" data-anchor-id="regresión">6.1 Regresión</h3>
+<section id="creación-del-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="creación-del-modelo">6.1.1 Creación del modelo</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos), <span class="fu">nrow</span>(datos) <span class="sc">*</span> porcentaje)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos[corte, ]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(test, <span class="at">select =</span> <span class="sc">-</span>SalePrice)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      SalePrice LotFrontage    LotArea OverallQual OverallCond MasVnrArea
+502   0.5561523   0.2046119 -0.0189590   0.6250871  -0.5143269 -0.5539444
+558  -0.8710204  -0.4129446  0.1368073  -1.4930010   0.3975731 -0.5539444
+220  -0.1587566  -1.1128419 -0.8743516   0.6250871  -0.5143269 -0.4676466
+633  -1.1776160   0.6163162  0.2451008   0.6250871  -0.5143269  0.5733208
+239   1.6538849   0.9456797  0.2614708   1.3311165  -0.5143269  0.8160334
+1140 -0.4381795   1.1515318 -0.1539481  -0.7869717  -0.5143269 -0.5539444
+      BsmtFinSF1 BsmtFinSF2   BsmtUnfSF TotalBsmtSF   X1stFlrSF  X2ndFlrSF
+502  -0.05551204 -0.2789238 -0.27446762  -0.4286251 -0.75536367  1.2766539
+558   0.45536864 -0.2789238 -1.31279469  -0.9395180 -0.67507408  0.2128718
+220  -0.88326808 -0.2789238  1.43231036   0.4236068  0.23401126 -0.7957683
+633   0.85415736 -0.2789238 -0.05610699   0.7314811  0.65617910 -0.7957683
+239  -0.91775792 -0.2789238  2.46172475   1.4186210  1.38914535 -0.7957683
+1140  0.47261356 -0.2789238 -0.71118888  -0.3193074  0.02422234 -0.7957683
+     LowQualFinSF  GrLivArea BsmtFullBath BsmtHalfBath   FullBath   HalfBath
+502    -0.1292534  0.4849815   -0.7893309   -0.2322977  0.7870343  1.2646757
+558    -0.1292534 -0.3291376   -0.7893309   -0.2322977 -1.0251160  1.2646757
+220    -0.1292534 -0.4949766   -0.7893309   -0.2322977  0.7870343 -0.7370295
+633    -0.1292534 -0.1877974   -0.7893309   -0.2322977  0.7870343 -0.7370295
+239    -0.1292534  0.3455259   -0.7893309   -0.2322977  0.7870343 -0.7370295
+1140   -0.1292534 -0.6476239   -0.7893309   -0.2322977 -1.0251160 -0.7370295
+     BedroomAbvGr KitchenAbvGr TotRmsAbvGrd Fireplaces GarageCars GarageArea
+502     0.1653829   -0.2227381    0.2831806 -0.9113728  0.3050927  0.5925701
+558     0.1653829   -0.2227381    0.2831806 -0.9113728 -0.9786599  0.4435129
+220    -1.0698206   -0.2227381   -0.9429094 -0.9113728  0.3050927 -0.1527161
+633     0.1653829   -0.2227381   -0.3298644  0.6785403  0.3050927  0.3260738
+239     0.1653829   -0.2227381    0.2831806 -0.9113728  1.5888453  1.5637006
+1140    0.1653829   -0.2227381   -0.3298644  0.6785403  0.3050927  0.1047464
+     WoodDeckSF OpenPorchSF EnclosedPorch X3SsnPorch ScreenPorch    PoolArea
+502  -0.7432639  0.94887441    -0.3697025 -0.1089014  -0.2691504 -0.07066183
+558  -0.7432639  0.02151271     1.5722512 -0.1089014  -0.2691504 -0.07066183
+220   0.1530699 -0.69301189    -0.3697025 -0.1089014  -0.2691504 -0.07066183
+633   0.8502183 -0.69301189    -0.3697025 -0.1089014  -0.2691504 -0.07066183
+239   0.6510330  2.77319253    -0.3697025 -0.1089014  -0.2691504 -0.07066183
+1140 -0.7432639 -0.69301189     3.1258142 -0.1089014   1.9761804 -0.07066183
+        MiscVal   Id MSSubClass MSZoning Street Alley LotShape LandContour
+502  -0.1346564  502         60       FV   Pave  &lt;NA&gt;      Reg         Lvl
+558  -0.1346564  558         50  C (all)   Pave  &lt;NA&gt;      Reg         Low
+220  -0.1346564  220        120       RL   Pave  &lt;NA&gt;      Reg         Lvl
+633  -0.1346564  633         20       RL   Pave  &lt;NA&gt;      Reg         Lvl
+239  -0.1346564  239         20       RL   Pave  &lt;NA&gt;      Reg         Lvl
+1140 -0.1346564 1140         30       RL   Pave  &lt;NA&gt;      IR1         Lvl
+     Utilities LotConfig LandSlope Neighborhood Condition1 Condition2 BldgType
+502     AllPub    Inside       Gtl      Somerst       Norm       Norm     1Fam
+558     AllPub    Inside       Mod       IDOTRR       Norm       Norm     1Fam
+220     AllPub    Inside       Gtl      Blmngtn       Norm       Norm   TwnhsE
+633     AllPub    Inside       Gtl       NWAmes       Norm       Norm     1Fam
+239     AllPub    Inside       Gtl      NridgHt       Norm       Norm     1Fam
+1140    AllPub    Inside       Gtl      BrkSide       Norm       Norm     1Fam
+     HouseStyle YearBuilt YearRemodAdd RoofStyle RoofMatl Exterior1st
+502      2Story      2005         2005     Gable  CompShg     VinylSd
+558      1.5Fin      1920         1950     Gable  CompShg     MetalSd
+220      1Story      2005         2006     Gable  CompShg     VinylSd
+633      1Story      1977         1977       Hip  CompShg     Plywood
+239      1Story      2007         2007       Hip  CompShg     VinylSd
+1140     1Story      1920         1950     Gable  CompShg      Stucco
+     Exterior2nd MasVnrType ExterQual ExterCond Foundation BsmtQual BsmtCond
+502      VinylSd       None        Gd        TA      PConc       Gd       TA
+558      MetalSd       None        TA        TA     CBlock       TA       TA
+220      VinylSd    BrkFace        Gd        TA      PConc       Gd       TA
+633      Plywood    BrkFace        TA        Gd     CBlock       TA       TA
+239      VinylSd    BrkFace        Ex        TA      PConc       Ex       TA
+1140      Stucco       None        TA        Fa     BrkTil       TA       TA
+     BsmtExposure BsmtFinType1 BsmtFinType2 Heating HeatingQC CentralAir
+502            No          GLQ          Unf    GasA        Gd          Y
+558            No          Rec          Unf    GasA        Gd          Y
+220            Av          GLQ          Unf    GasA        Ex          Y
+633            No          ALQ          Unf    GasA        TA          Y
+239            No          Unf          Unf    GasA        Ex          Y
+1140           No          BLQ          Unf    GasA        TA          Y
+     Electrical KitchenQual Functional FireplaceQu GarageType GarageYrBlt
+502       SBrkr          Gd        Typ        &lt;NA&gt;     Attchd        2005
+558       SBrkr          TA        Typ        &lt;NA&gt;    CarPort        1994
+220       SBrkr          Gd        Typ        &lt;NA&gt;     Attchd        2005
+633       SBrkr          TA        Typ          TA     Attchd        1977
+239       SBrkr          Gd        Typ        &lt;NA&gt;     Attchd        2007
+1140      SBrkr          TA       Maj1          Gd     Detchd        1972
+     GarageFinish GarageQual GarageCond PavedDrive PoolQC Fence MiscFeature
+502           RFn         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
+558           Unf         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
+220           Fin         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
+633           Fin         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
+239           Fin         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
+1140          Unf         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
+     MoSold YrSold SaleType SaleCondition
+502       2   2008       WD        Normal
+558       9   2006      COD        Normal
+220       3   2006      New       Partial
+633       4   2009       WD        Family
+239      12   2007      New       Partial
+1140      5   2007       WD        Normal</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>modeloNB<span class="ot">&lt;-</span><span class="fu">naiveBayes</span>(SalePrice<span class="sc">~</span>.,<span class="at">data=</span>train)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>predNB<span class="ot">&lt;-</span> <span class="fu">predict</span>(modeloNB,<span class="at">newdata =</span> test1)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>predNB<span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(predNB))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(test<span class="sc">$</span>SalePrice, <span class="at">col=</span><span class="st">"red"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(predNB, <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>EMA <span class="ot">&lt;-</span> <span class="fu">mean</span>(test<span class="sc">$</span>SalePrice<span class="sc">-</span>predNB, <span class="at">na.rm =</span> T)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>EMA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.1137683</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> <span class="fu">mean</span>((predNB <span class="sc">-</span> test<span class="sc">$</span>SalePrice)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate SSE</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((predNB <span class="sc">-</span> test<span class="sc">$</span>SalePrice)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate TSS</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>TSS <span class="ot">&lt;-</span> <span class="fu">sum</span>((test<span class="sc">$</span>SalePrice <span class="sc">-</span> <span class="fu">mean</span>(test<span class="sc">$</span>SalePrice))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate R-squared value</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>r2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> SSE <span class="sc">/</span> TSS</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>rmse <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(mse)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"R-squared:"</span>, r2, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R-squared: 0.6501454 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE:"</span>, rmse, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>RMSE: 0.6176551 </code></pre>
+</div>
+</div>
+<p>En comparación del modelo de regresion lineal multiple con el de Naive Bayes obtuvimos que el mejor modelo es el de Naive Bayes ya que el <strong><em>RMSE</em></strong> que se obtiene con este modelo es menor siendo este un 0.59 sobre un 0.66 que se obtuvo con el modelo de regresion multiple. Indicando asi que el modelo de naive bayes tiene menor cantidad de errores para realizar predicciones sobre el precio de las viviendas.</p>
+<p>Por otro lado en comparacion con el arbol de regresion se obtuvieron <strong><em>R^2</em></strong> bastante similares con siendo estos 0.64 para el arbol y un 0.65 para el naive bayes. Esto indica que ambos modelos son bastante similares para realizar predicciones sobre el precio de las viviendas, pero el modelo de Naive Bayes es mejor.</p>
+</section>
+</section>
+<section id="clasificación" class="level3">
+<h3 class="anchored" data-anchor-id="clasificación">6.2 Clasificación</h3>
+<section id="división-de-datos-en-categorías" class="level4">
+<h4 class="anchored" data-anchor-id="división-de-datos-en-categorías">6.2.1 División de datos en categorías</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos<span class="sc">$</span>SalePrice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       V1         
+ Min.   :-1.7499  
+ 1st Qu.:-0.6366  
+ Median :-0.2578  
+ Mean   : 0.0000  
+ 3rd Qu.: 0.3974  
+ Max.   : 6.9081  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>p33 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.33</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>p66 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.66</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">clasificacion =</span> <span class="fu">ifelse</span>(datos<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p33, <span class="st">"Economicas"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ifelse</span>(datos<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p66, <span class="st">"Intermedias"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Caras"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>clasificacion <span class="ot">&lt;-</span> <span class="fu">factor</span>(datos<span class="sc">$</span>clasificacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos), <span class="fu">nrow</span>(datos) <span class="sc">*</span> porcentaje)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos[corte, ]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="predicción-y-evaluación-de-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="predicción-y-evaluación-de-modelo">6.2.2 Predicción y evaluación de modelo</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>modelo<span class="ot">&lt;-</span><span class="fu">naiveBayes</span>(train<span class="sc">$</span>clasificacion<span class="sc">~</span>., <span class="at">data=</span>train)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(test, <span class="at">select =</span> <span class="sc">-</span>clasificacion)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>predBayes<span class="ot">&lt;-</span><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> test1)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>cm<span class="ot">&lt;-</span>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(predBayes,test<span class="sc">$</span>clasificacion)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>cm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+             Reference
+Prediction    Caras Economicas Intermedias
+  Caras         108          0          18
+  Economicas      0        112          40
+  Intermedias    14          9          58
+
+Overall Statistics
+                                          
+               Accuracy : 0.7744          
+                 95% CI : (0.7276, 0.8166)
+    No Information Rate : 0.3398          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.6608          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: Caras Class: Economicas Class: Intermedias
+Sensitivity                0.8852            0.9256             0.5000
+Specificity                0.9241            0.8319             0.9053
+Pos Pred Value             0.8571            0.7368             0.7160
+Neg Pred Value             0.9399            0.9565             0.7914
+Prevalence                 0.3398            0.3370             0.3231
+Detection Rate             0.3008            0.3120             0.1616
+Detection Prevalence       0.3510            0.4234             0.2256
+Balanced Accuracy          0.9046            0.8788             0.7027</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>tp <span class="ot">&lt;-</span> cm<span class="sc">$</span>table[<span class="dv">2</span>, <span class="dv">2</span>]  <span class="co"># true positives Casa este etiquetada bien cara / cara</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>tn <span class="ot">&lt;-</span> cm<span class="sc">$</span>table[<span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># true negatives Casa esta etiquetada bien barata / barata</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> cm<span class="sc">$</span>table[<span class="dv">1</span>, <span class="dv">2</span>]  <span class="co"># false positives Casa etiquetada como cara / barata</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> cm<span class="sc">$</span>table[<span class="dv">2</span>, <span class="dv">1</span>]  <span class="co"># false negatives Casa etiquetada como barata / cara</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>recall <span class="ot">&lt;-</span> tp <span class="sc">/</span> (tp <span class="sc">+</span> fn)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>recall</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+</section>
+<section id="cross-validation" class="level4">
+<h4 class="anchored" data-anchor-id="cross-validation">6.2.3 Cross validation</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>train_without_pred_variable <span class="ot">&lt;-</span> <span class="fu">subset</span>(train, <span class="at">select =</span> <span class="sc">-</span>clasificacion)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>train_without_pred_variable <span class="ot">=</span> train_without_pred_variable[, numeric_variables]</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>,<span class="at">number=</span><span class="dv">10</span>, <span class="at">verboseIter=</span>T)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>modelo3 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(train_without_pred_variable, train<span class="sc">$</span>clasificacion, <span class="at">trControl =</span> ct, <span class="at">method=</span><span class="st">"naive_bayes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+ Fold01: usekernel= TRUE, laplace=0, adjust=1 
+- Fold01: usekernel= TRUE, laplace=0, adjust=1 
++ Fold01: usekernel=FALSE, laplace=0, adjust=1 
+- Fold01: usekernel=FALSE, laplace=0, adjust=1 
++ Fold02: usekernel= TRUE, laplace=0, adjust=1 
+- Fold02: usekernel= TRUE, laplace=0, adjust=1 
++ Fold02: usekernel=FALSE, laplace=0, adjust=1 
+- Fold02: usekernel=FALSE, laplace=0, adjust=1 
++ Fold03: usekernel= TRUE, laplace=0, adjust=1 
+- Fold03: usekernel= TRUE, laplace=0, adjust=1 
++ Fold03: usekernel=FALSE, laplace=0, adjust=1 
+- Fold03: usekernel=FALSE, laplace=0, adjust=1 
++ Fold04: usekernel= TRUE, laplace=0, adjust=1 
+- Fold04: usekernel= TRUE, laplace=0, adjust=1 
++ Fold04: usekernel=FALSE, laplace=0, adjust=1 
+- Fold04: usekernel=FALSE, laplace=0, adjust=1 
++ Fold05: usekernel= TRUE, laplace=0, adjust=1 
+- Fold05: usekernel= TRUE, laplace=0, adjust=1 
++ Fold05: usekernel=FALSE, laplace=0, adjust=1 
+- Fold05: usekernel=FALSE, laplace=0, adjust=1 
++ Fold06: usekernel= TRUE, laplace=0, adjust=1 
+- Fold06: usekernel= TRUE, laplace=0, adjust=1 
++ Fold06: usekernel=FALSE, laplace=0, adjust=1 
+- Fold06: usekernel=FALSE, laplace=0, adjust=1 
++ Fold07: usekernel= TRUE, laplace=0, adjust=1 
+- Fold07: usekernel= TRUE, laplace=0, adjust=1 
++ Fold07: usekernel=FALSE, laplace=0, adjust=1 
+- Fold07: usekernel=FALSE, laplace=0, adjust=1 
++ Fold08: usekernel= TRUE, laplace=0, adjust=1 
+- Fold08: usekernel= TRUE, laplace=0, adjust=1 
++ Fold08: usekernel=FALSE, laplace=0, adjust=1 
+- Fold08: usekernel=FALSE, laplace=0, adjust=1 
++ Fold09: usekernel= TRUE, laplace=0, adjust=1 
+- Fold09: usekernel= TRUE, laplace=0, adjust=1 
++ Fold09: usekernel=FALSE, laplace=0, adjust=1 
+- Fold09: usekernel=FALSE, laplace=0, adjust=1 
++ Fold10: usekernel= TRUE, laplace=0, adjust=1 
+- Fold10: usekernel= TRUE, laplace=0, adjust=1 
++ Fold10: usekernel=FALSE, laplace=0, adjust=1 
+- Fold10: usekernel=FALSE, laplace=0, adjust=1 
+Aggregating results
+Selecting tuning parameters
+Fitting laplace = 0, usekernel = TRUE, adjust = 1 on full training set</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>y3pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo3, <span class="at">newdata =</span> test)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">&lt;-</span> <span class="fu">table</span>(test<span class="sc">$</span>clasificacion, y3pred)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>tp <span class="ot">&lt;-</span> cm[<span class="dv">2</span>, <span class="dv">2</span>]  <span class="co"># true positives Casa este etiquetada bien cara / cara</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>tn <span class="ot">&lt;-</span> cm[<span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># true negatives Casa esta etiquetada bien barata / barata</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> cm[<span class="dv">1</span>, <span class="dv">2</span>]  <span class="co"># false positives Casa etiquetada como cara / barata</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> cm[<span class="dv">2</span>, <span class="dv">1</span>]  <span class="co"># false negatives Casa etiquetada como barata / cara</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>recall <span class="ot">&lt;-</span> tp <span class="sc">/</span> (tp <span class="sc">+</span> fn)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>recall</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.991453</code></pre>
+</div>
+</div>
+</section>
+<section id="overfitting-de-naive-bayes" class="level4">
+<h4 class="anchored" data-anchor-id="overfitting-de-naive-bayes">6.2.4 Overfitting de Naive Bayes</h4>
+</section>
+<section id="modelo-con-predicción-de-train" class="level4">
+<h4 class="anchored" data-anchor-id="modelo-con-predicción-de-train">Modelo con predicción de train</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>modelo<span class="ot">&lt;-</span><span class="fu">naiveBayes</span>(train<span class="sc">$</span>clasificacion<span class="sc">~</span>., <span class="at">data=</span>train)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(train, <span class="at">select =</span> <span class="sc">-</span>clasificacion)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>predBayes<span class="ot">&lt;-</span><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> test1)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>cm<span class="ot">&lt;-</span>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(predBayes,train<span class="sc">$</span>clasificacion)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>cm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+             Reference
+Prediction    Caras Economicas Intermedias
+  Caras         260          0          37
+  Economicas      2        267          88
+  Intermedias    22          7         153
+
+Overall Statistics
+                                          
+               Accuracy : 0.8134          
+                 95% CI : (0.7853, 0.8393)
+    No Information Rate : 0.3397          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.7202          
+                                          
+ Mcnemar's Test P-Value : 3.851e-16       
+
+Statistics by Class:
+
+                     Class: Caras Class: Economicas Class: Intermedias
+Sensitivity                0.9155            0.9745             0.5504
+Specificity                0.9330            0.8399             0.9480
+Pos Pred Value             0.8754            0.7479             0.8407
+Neg Pred Value             0.9555            0.9854             0.8089
+Prevalence                 0.3397            0.3278             0.3325
+Detection Rate             0.3110            0.3194             0.1830
+Detection Prevalence       0.3553            0.4270             0.2177
+Balanced Accuracy          0.9242            0.9072             0.7492</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>modelo<span class="ot">&lt;-</span><span class="fu">naiveBayes</span>(train<span class="sc">$</span>clasificacion<span class="sc">~</span>., <span class="at">data=</span>train)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(test, <span class="at">select =</span> <span class="sc">-</span>clasificacion)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>predBayes<span class="ot">&lt;-</span><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> test1)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>cm<span class="ot">&lt;-</span>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(predBayes,test<span class="sc">$</span>clasificacion)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>cm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+             Reference
+Prediction    Caras Economicas Intermedias
+  Caras         108          0          18
+  Economicas      0        112          40
+  Intermedias    14          9          58
+
+Overall Statistics
+                                          
+               Accuracy : 0.7744          
+                 95% CI : (0.7276, 0.8166)
+    No Information Rate : 0.3398          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.6608          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: Caras Class: Economicas Class: Intermedias
+Sensitivity                0.8852            0.9256             0.5000
+Specificity                0.9241            0.8319             0.9053
+Pos Pred Value             0.8571            0.7368             0.7160
+Neg Pred Value             0.9399            0.9565             0.7914
+Prevalence                 0.3398            0.3370             0.3231
+Detection Rate             0.3008            0.3120             0.1616
+Detection Prevalence       0.3510            0.4234             0.2256
+Balanced Accuracy          0.9046            0.8788             0.7027</code></pre>
+</div>
+</div>
+<p>Al observar el accuracy de la matriz de confusión al predecir con train y al predecir con test, es posible observar que el accuracy de test es menor. Esto quiere decir que es muy posible que el modelo no esté haciendo overfitting. Sin embargo, tiene recall de 1 y 0.99 sin cross validation y con crossvalidation, por lo que es posible que si esté realizándolo, aunque también es posible obtener estos resultados por el tipo de la métrica usada.</p>
+<p>El mejor modelo entre el cross validation y el anterior es el anterior porque este tiene un recall de 1 mientras que con cross validation es de 0.99.</p>
+</section>
+</section>
+</section>
+<section id="random-forest" class="level2">
+<h2 class="anchored" data-anchor-id="random-forest">7. Random Forest</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>train1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(train, <span class="at">selecWt =</span> <span class="sc">-</span>SalePrice)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>multi_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"TotalBsmtSF"</span>,<span class="st">"HouseStyle"</span>,<span class="st">"BsmtQual"</span>,<span class="st">"Neighborhood"</span>, <span class="st">"clasificacion"</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>train1 <span class="ot">&lt;-</span> train1[, multi_variables]</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> test[, multi_variables]</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>modeloRF <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(clasificacion<span class="sc">~</span>., train1, <span class="at">na.action =</span> na.omit)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>y5pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modeloRF, <span class="at">newdata =</span> test)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>y5pred <span class="ot">&lt;-</span> <span class="fu">factor</span>(y5pred)</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="at">reference =</span> test<span class="sc">$</span>clasificacion, <span class="at">data =</span> y5pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+             Reference
+Prediction    Caras Economicas Intermedias
+  Caras         107          0          11
+  Economicas      0         92          17
+  Intermedias    15         22          87
+
+Overall Statistics
+                                          
+               Accuracy : 0.8148          
+                 95% CI : (0.7702, 0.8541)
+    No Information Rate : 0.3476          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.7222          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: Caras Class: Economicas Class: Intermedias
+Sensitivity                0.8770            0.8070             0.7565
+Specificity                0.9520            0.9283             0.8432
+Pos Pred Value             0.9068            0.8440             0.7016
+Neg Pred Value             0.9356            0.9091             0.8767
+Prevalence                 0.3476            0.3248             0.3276
+Detection Rate             0.3048            0.2621             0.2479
+Detection Prevalence       0.3362            0.3105             0.3533
+Balanced Accuracy          0.9145            0.8676             0.7999</code></pre>
+</div>
+</div>
+<section id="métrica-de-desempeño-del-random-forest" class="level3">
+<h3 class="anchored" data-anchor-id="métrica-de-desempeño-del-random-forest">7.1 Métrica de desempeño del random forest</h3>
+<p>Se decidió usar recall, porque se consideró que era más costoso identificar una casa cara como barata por sus implicaciones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>cm3 <span class="ot">&lt;-</span> <span class="fu">table</span>(test<span class="sc">$</span>clasificacion, y5pred)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>tp <span class="ot">&lt;-</span> cm3[<span class="dv">2</span>, <span class="dv">2</span>]  <span class="co"># true positives Casa este etiquetada bien cara / cara</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>tn <span class="ot">&lt;-</span> cm3[<span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># true negatives Casa esta etiquetada bien barata / barata</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> cm3[<span class="dv">1</span>, <span class="dv">2</span>]  <span class="co"># false positives Casa etiquetada como cara / barata</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> cm3[<span class="dv">2</span>, <span class="dv">1</span>]  <span class="co"># false negatives Casa etiquetada como barata / cara</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>recall3 <span class="ot">&lt;-</span> tp <span class="sc">/</span> (tp <span class="sc">+</span> fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>El recall del random forest inicial es 1. Esto nos indica que el modelo es un buen identificador casos positivos, pero aun puede que no sea muy bueno para identificar falsos positivos. Esto puede causar que casas que son baratas sean clasificadas como caras y no se lleguen a vender. Pero también indica que es poco probable que clasifiquen casas caras como baratas, evitando desinformación.</p>
+</section>
+<section id="matriz-de-confusión-del-random-forest" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-de-confusión-del-random-forest">7.2 Matriz de confusión del random forest</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>confusion_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="at">reference =</span> test<span class="sc">$</span>clasificacion, <span class="at">data =</span> y5pred)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>confusion_matrix<span class="sc">$</span>table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Reference
+Prediction    Caras Economicas Intermedias
+  Caras         107          0          11
+  Economicas      0         92          17
+  Intermedias    15         22          87</code></pre>
+</div>
+</div>
+<p>El recall del árbol de decisión es de 0.9896907, el del random forest es de 1 y el de naive bayes es de también es 1. Por otra parte, el accuracy de random forest es de 0.81, el del árbol de decisión es 0.77 y el de naive bayes es de 0.77. Entonces, para clasficiación de positivos es posible ver que naive bayes y random forest son los mejores modelos. Por otra parte, para clasificación en general es mejor random forest.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
