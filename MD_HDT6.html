@@ -135,782 +135,788 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </div>
 </section>
-<section id="data-de-entrenamiento-y-de-prueba" class="level3">
-<h3 class="anchored" data-anchor-id="data-de-entrenamiento-y-de-prueba">1.2 Data de entrenamiento y de prueba</h3>
+<section id="analisis-de-nas" class="level3">
+<h3 class="anchored" data-anchor-id="analisis-de-nas">1.2 Analisis de NA’s</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos), <span class="fu">nrow</span>(datos) <span class="sc">*</span> porcentaje)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos[corte, ]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>faltantes_por_col <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(datos))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>faltantes_por_col</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                      
+            0             0             0             0             0 
+                                                                      
+            0             0             0             0             0 
+                                                                      
+            0             0             0             0             0 
+                                                                      
+            0             0             0             0             0 
+                                                                      
+            0             0             0             0             0 
+                                                                      
+            0             0             0             0             0 
+                         Id    MSSubClass      MSZoning        Street 
+            0             0             0             0             0 
+        Alley      LotShape   LandContour     Utilities     LotConfig 
+         1110             0             0             0             0 
+    LandSlope  Neighborhood    Condition1    Condition2      BldgType 
+            0             0             0             0             0 
+   HouseStyle     YearBuilt  YearRemodAdd     RoofStyle      RoofMatl 
+            0             0             0             0             0 
+  Exterior1st   Exterior2nd    MasVnrType     ExterQual     ExterCond 
+            0             0             0             0             0 
+   Foundation      BsmtQual      BsmtCond  BsmtExposure  BsmtFinType1 
+            0            31            31            32            31 
+ BsmtFinType2       Heating     HeatingQC    CentralAir    Electrical 
+           32             0             0             0             1 
+  KitchenQual    Functional   FireplaceQu    GarageType   GarageYrBlt 
+            0             0           596            74            74 
+ GarageFinish    GarageQual    GarageCond    PavedDrive        PoolQC 
+           74            74            74             0          1189 
+        Fence   MiscFeature        MoSold        YrSold      SaleType 
+          967          1156             0             0             0 
+SaleCondition 
+            0 </code></pre>
+</div>
+</div>
+<p>Se puede observar que PoolQC tiene demasiados datos faltantes, al igual que Fence, Alley, MiscFeature y FireplaceQu. Por lo tanto estas columnas no se usaran.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">select</span>(datos, <span class="sc">-</span>Id, <span class="sc">-</span>PoolQC, <span class="sc">-</span>Fence, <span class="sc">-</span>Alley, <span class="sc">-</span>MiscFeature, <span class="sc">-</span>FireplaceQu) </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="creación-de-árbol-de-clasificación-de-la-nueva-varibale" class="level3">
-<h3 class="anchored" data-anchor-id="creación-de-árbol-de-clasificación-de-la-nueva-varibale">1.3 Creación de árbol de clasificación de la nueva varibale</h3>
+<section id="eliminación-de-variables-no-significativas" class="level3">
+<h3 class="anchored" data-anchor-id="eliminación-de-variables-no-significativas">1.2 Eliminación de variables no significativas</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>p33 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.33</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>p66 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.66</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>datosT <span class="ot">&lt;-</span> datos</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>datosT <span class="ot">&lt;-</span> datosT <span class="sc">%&gt;%</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">clasificacion =</span> <span class="fu">ifelse</span>(datosT<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p33, <span class="st">"Economicas"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ifelse</span>(datosT<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p66, <span class="st">"Intermedias"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Caras"</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>datosT<span class="sc">$</span>clasificacion <span class="ot">&lt;-</span> <span class="fu">factor</span>(datosT<span class="sc">$</span>clasificacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">select</span>(datos, <span class="sc">-</span>GarageYrBlt, <span class="sc">-</span>SaleType, <span class="sc">-</span>SaleCondition, <span class="sc">-</span>MoSold, <span class="sc">-</span>YrSold, <span class="sc">-</span>YearBuilt, <span class="sc">-</span>Condition2, <span class="sc">-</span>MSSubClass, MSZoning, <span class="sc">-</span>LotShape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Se observaron diferentes variables que no aportaban al modelo, por lo tanto se decidió eliminarlas.</p>
+</section>
+<section id="creación-de-clasificación-de-la-variable-de-precios" class="level3">
+<h3 class="anchored" data-anchor-id="creación-de-clasificación-de-la-variable-de-precios">1.3 Creación de clasificación de la variable de precios</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p33 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.33</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p66 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.66</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>datosT <span class="ot">&lt;-</span> datos</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>datosT <span class="ot">&lt;-</span> datosT <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">clasificacion =</span> <span class="fu">ifelse</span>(datosT<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p33, <span class="st">"Economicas"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ifelse</span>(datosT<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p66, <span class="st">"Intermedias"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Caras"</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>datosT<span class="sc">$</span>clasificacion <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(datosT<span class="sc">$</span>clasificacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="creación-de-variables-dicotómicas" class="level3">
-<h3 class="anchored" data-anchor-id="creación-de-variables-dicotómicas">Creación de variables dicotómicas</h3>
+<h3 class="anchored" data-anchor-id="creación-de-variables-dicotómicas">1.4 Creación de variables dicotómicas</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datosT<span class="sc">$</span>clasificacion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastDummies)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>datos_con_dummy <span class="ot">&lt;-</span> <span class="fu">dummy_cols</span>(datosT, <span class="at">select_columns =</span> <span class="fu">c</span>(<span class="st">"clasificacion"</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>datos_con_dummy <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>clasificacion, <span class="sc">-</span>clasificacion_Economicas, <span class="sc">-</span>clasificacion_Intermedias) </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>datos_con_dummy<span class="sc">$</span>clasificacion_Caras <span class="ot">&lt;-</span> datos_con_dummy<span class="sc">$</span>clasificacion_Caras</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>datos_con_dummy<span class="ot">&lt;-</span>datos_con_dummy <span class="sc">%&gt;%</span> <span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">"clasificacion_Caras"</span>),as.factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="modelo-con-todas-las-variables" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-con-todas-las-variables">1.5. Modelo con todas las variables</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>numeric_variables2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"LotFrontage"</span>, <span class="st">"LotArea"</span>, <span class="st">"OverallQual"</span>, <span class="st">"OverallCond"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtFinSF2"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"TotalBsmtSF"</span>, <span class="st">"X1stFlrSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"LowQualFinSF"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"BsmtHalfBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"HalfBath"</span>, <span class="st">"BedroomAbvGr"</span>, <span class="st">"KitchenAbvGr"</span>, <span class="st">"TotRmsAbvGrd"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"GarageCars"</span>, <span class="st">"GarageArea"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"EnclosedPorch"</span>, <span class="st">"X3SsnPorch"</span>, <span class="st">"ScreenPorch"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>SalePrice)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>Utilities)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- datos_con_dummy[, numeric_variables2]</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_num), <span class="fu">nrow</span>(datos_num) <span class="sc">*</span> porcentaje)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos_num[corte, ]</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_num[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary, <span class="at">signif.stars =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   [1] Caras       Intermedias Caras       Intermedias Caras       Intermedias
-   [7] Caras       Economicas  Economicas  Economicas  Caras       Caras      
-  [13] Economicas  Economicas  Intermedias Intermedias Caras       Intermedias
-  [19] Caras       Economicas  Caras       Economicas  Caras       Caras      
-  [25] Economicas  Economicas  Intermedias Intermedias Caras       Caras      
-  [31] Intermedias Intermedias Economicas  Economicas  Intermedias Intermedias
-  [37] Intermedias Caras       Caras       Caras       Economicas  Economicas 
-  [43] Economicas  Economicas  Caras       Economicas  Intermedias Intermedias
-  [49] Caras       Caras       Economicas  Intermedias Economicas  Caras      
-  [55] Intermedias Caras       Caras       Economicas  Caras       Caras      
-  [61] Economicas  Intermedias Intermedias Economicas  Economicas  Economicas 
-  [67] Intermedias Economicas  Caras       Intermedias Caras       Economicas 
-  [73] Caras       Intermedias Intermedias Economicas  Economicas  Economicas 
-  [79] Economicas  Intermedias Economicas  Caras       Caras       Economicas 
-  [85] Economicas  Economicas  Intermedias Economicas  Caras       Caras      
-  [91] Economicas  Economicas  Economicas  Caras       Intermedias Caras      
-  [97] Caras       Intermedias Intermedias Caras       Intermedias Economicas 
- [103] Intermedias Intermedias Intermedias Economicas  Economicas  Intermedias
- [109] Intermedias Caras       Intermedias Intermedias Intermedias Intermedias
- [115] Caras       Caras       Economicas  Caras       Intermedias Caras      
- [121] Economicas  Economicas  Economicas  Intermedias Economicas  Caras      
- [127] Economicas  Economicas  Economicas  Caras       Caras       Caras      
- [133] Caras       Caras       Economicas  Intermedias Economicas  Caras      
- [139] Intermedias Caras       Caras       Intermedias Intermedias Caras      
- [145] Caras       Caras       Economicas  Caras       Economicas  Caras      
- [151] Economicas  Caras       Economicas  Intermedias Caras       Caras      
- [157] Caras       Economicas  Economicas  Intermedias Caras       Caras      
- [163] Economicas  Caras       Intermedias Intermedias Economicas  Economicas 
- [169] Intermedias Intermedias Intermedias Economicas  Intermedias Caras      
- [175] Intermedias Economicas  Caras       Economicas  Intermedias Caras      
- [181] Intermedias Economicas  Caras       Economicas  Caras       Economicas 
- [187] Economicas  Caras       Intermedias Caras       Economicas  Economicas 
- [193] Economicas  Intermedias Caras       Economicas  Caras       Economicas 
- [199] Economicas  Economicas  Caras       Intermedias Intermedias Intermedias
- [205] Economicas  Caras       Intermedias Intermedias Intermedias Caras      
- [211] Caras       Caras       Caras       Economicas  Intermedias Caras      
- [217] Intermedias Economicas  Economicas  Intermedias Intermedias Intermedias
- [223] Economicas  Caras       Caras       Caras       Intermedias Economicas 
- [229] Caras       Caras       Intermedias Caras       Caras       Caras      
- [235] Intermedias Caras       Caras       Intermedias Intermedias Intermedias
- [241] Intermedias Caras       Intermedias Economicas  Intermedias Intermedias
- [247] Intermedias Caras       Intermedias Intermedias Intermedias Caras      
- [253] Caras       Intermedias Caras       Caras       Caras       Caras      
- [259] Economicas  Economicas  Caras       Intermedias Intermedias Caras      
- [265] Caras       Caras       Caras       Caras       Caras       Economicas 
- [271] Caras       Economicas  Caras       Intermedias Economicas  Intermedias
- [277] Caras       Caras       Caras       Caras       Caras       Caras      
- [283] Intermedias Caras       Economicas  Caras       Economicas  Intermedias
- [289] Intermedias Caras       Caras       Economicas  Economicas  Intermedias
- [295] Intermedias Economicas  Economicas  Caras       Caras       Economicas 
- [301] Intermedias Intermedias Economicas  Economicas  Economicas  Economicas 
- [307] Caras       Intermedias Caras       Caras       Intermedias Economicas 
- [313] Intermedias Caras       Economicas  Caras       Economicas  Economicas 
- [319] Caras       Caras       Economicas  Caras       Economicas  Economicas 
- [325] Economicas  Intermedias Economicas  Caras       Caras       Intermedias
- [331] Economicas  Caras       Economicas  Intermedias Caras       Caras      
- [337] Economicas  Intermedias Economicas  Caras       Intermedias Intermedias
- [343] Caras       Economicas  Intermedias Caras       Economicas  Caras      
- [349] Intermedias Economicas  Economicas  Caras       Intermedias Economicas 
- [355] Economicas  Economicas  Intermedias Economicas  Caras       Economicas 
- [361] Economicas  Economicas  Economicas  Caras       Economicas  Intermedias
- [367] Intermedias Caras       Economicas  Caras       Economicas  Economicas 
- [373] Economicas  Caras       Caras       Intermedias Intermedias Economicas 
- [379] Caras       Intermedias Economicas  Intermedias Economicas  Intermedias
- [385] Intermedias Caras       Intermedias Caras       Intermedias Caras      
- [391] Caras       Economicas  Caras       Caras       Caras       Economicas 
- [397] Caras       Caras       Intermedias Intermedias Intermedias Intermedias
- [403] Intermedias Intermedias Economicas  Economicas  Intermedias Intermedias
- [409] Economicas  Economicas  Intermedias Economicas  Economicas  Economicas 
- [415] Caras       Intermedias Caras       Intermedias Economicas  Caras      
- [421] Caras       Intermedias Economicas  Intermedias Caras       Economicas 
- [427] Economicas  Economicas  Caras       Caras       Caras       Economicas 
- [433] Intermedias Intermedias Intermedias Caras       Intermedias Economicas 
- [439] Caras       Economicas  Intermedias Economicas  Economicas  Economicas 
- [445] Intermedias Economicas  Intermedias Caras       Caras       Economicas 
- [451] Intermedias Caras       Economicas  Economicas  Caras       Intermedias
- [457] Economicas  Caras       Economicas  Caras       Economicas  Intermedias
- [463] Economicas  Intermedias Intermedias Economicas  Intermedias Economicas 
- [469] Caras       Caras       Caras       Intermedias Economicas  Caras      
- [475] Intermedias Intermedias Economicas  Intermedias Intermedias Intermedias
- [481] Economicas  Caras       Economicas  Caras       Economicas  Caras      
- [487] Economicas  Intermedias Intermedias Economicas  Intermedias Caras      
- [493] Intermedias Economicas  Caras       Economicas  Caras       Caras      
- [499] Intermedias Caras       Intermedias Caras       Intermedias Caras      
- [505] Caras       Intermedias Caras       Caras       Economicas  Intermedias
- [511] Economicas  Intermedias Economicas  Caras       Caras       Economicas 
- [517] Caras       Economicas  Intermedias Intermedias Intermedias Economicas 
- [523] Intermedias Economicas  Caras       Economicas  Intermedias Intermedias
- [529] Caras       Economicas  Economicas  Economicas  Caras       Caras      
- [535] Caras       Intermedias Caras       Economicas  Intermedias Intermedias
- [541] Economicas  Economicas  Caras       Economicas  Caras       Economicas 
- [547] Intermedias Intermedias Economicas  Intermedias Caras       Economicas 
- [553] Intermedias Caras       Caras       Caras       Intermedias Intermedias
- [559] Economicas  Caras       Intermedias Intermedias Economicas  Economicas 
- [565] Caras       Intermedias Intermedias Caras       Caras       Caras      
- [571] Caras       Caras       Caras       Caras       Economicas  Intermedias
- [577] Intermedias Economicas  Economicas  Intermedias Caras       Caras      
- [583] Intermedias Caras       Intermedias Caras       Economicas  Caras      
- [589] Intermedias Economicas  Economicas  Caras       Economicas  Intermedias
- [595] Intermedias Intermedias Caras       Economicas  Economicas  Economicas 
- [601] Caras       Economicas  Caras       Economicas  Economicas  Caras      
- [607] Intermedias Caras       Economicas  Intermedias Economicas  Caras      
- [613] Intermedias Caras       Economicas  Intermedias Intermedias Intermedias
- [619] Intermedias Caras       Caras       Economicas  Economicas  Caras      
- [625] Caras       Intermedias Intermedias Caras       Intermedias Caras      
- [631] Economicas  Economicas  Caras       Caras       Caras       Caras      
- [637] Caras       Intermedias Caras       Caras       Economicas  Economicas 
- [643] Economicas  Caras       Intermedias Caras       Intermedias Intermedias
- [649] Economicas  Intermedias Intermedias Intermedias Economicas  Intermedias
- [655] Caras       Economicas  Intermedias Caras       Caras       Intermedias
- [661] Intermedias Economicas  Caras       Intermedias Caras       Economicas 
- [667] Caras       Caras       Economicas  Caras       Economicas  Caras      
- [673] Intermedias Economicas  Intermedias Economicas  Intermedias Economicas 
- [679] Caras       Intermedias Caras       Intermedias Economicas  Intermedias
- [685] Caras       Caras       Economicas  Caras       Intermedias Intermedias
- [691] Intermedias Caras       Intermedias Intermedias Economicas  Intermedias
- [697] Economicas  Intermedias Economicas  Intermedias Intermedias Intermedias
- [703] Intermedias Caras       Economicas  Caras       Intermedias Economicas 
- [709] Intermedias Intermedias Intermedias Intermedias Caras       Economicas 
- [715] Intermedias Economicas  Caras       Caras       Economicas  Caras      
- [721] Economicas  Caras       Economicas  Economicas  Economicas  Caras      
- [727] Economicas  Caras       Intermedias Intermedias Intermedias Economicas 
- [733] Economicas  Caras       Intermedias Economicas  Caras       Intermedias
- [739] Economicas  Intermedias Intermedias Economicas  Intermedias Economicas 
- [745] Intermedias Caras       Economicas  Intermedias Intermedias Caras      
- [751] Economicas  Caras       Caras       Intermedias Intermedias Economicas 
- [757] Intermedias Intermedias Economicas  Economicas  Caras       Intermedias
- [763] Caras       Intermedias Intermedias Caras       Caras       Caras      
- [769] Caras       Economicas  Caras       Caras       Caras       Economicas 
- [775] Caras       Caras       Intermedias Intermedias Intermedias Economicas 
- [781] Intermedias Caras       Caras       Caras       Economicas  Economicas 
- [787] Economicas  Economicas  Intermedias Economicas  Economicas  Intermedias
- [793] Intermedias Economicas  Intermedias Caras       Caras       Intermedias
- [799] Intermedias Economicas  Intermedias Economicas  Intermedias Economicas 
- [805] Intermedias Economicas  Economicas  Intermedias Caras       Intermedias
- [811] Economicas  Economicas  Economicas  Caras       Caras       Caras      
- [817] Intermedias Intermedias Intermedias Caras       Economicas  Economicas 
- [823] Caras       Economicas  Economicas  Caras       Intermedias Intermedias
- [829] Economicas  Caras       Economicas  Economicas  Economicas  Intermedias
- [835] Economicas  Economicas  Caras       Caras       Caras       Intermedias
- [841] Caras       Economicas  Caras       Economicas  Intermedias Caras      
- [847] Economicas  Economicas  Caras       Economicas  Caras       Economicas 
- [853] Economicas  Intermedias Caras       Caras       Caras       Caras      
- [859] Intermedias Economicas  Economicas  Intermedias Caras       Intermedias
- [865] Intermedias Caras       Intermedias Intermedias Caras       Caras      
- [871] Economicas  Economicas  Economicas  Caras       Intermedias Intermedias
- [877] Intermedias Economicas  Economicas  Intermedias Economicas  Intermedias
- [883] Caras       Caras       Intermedias Intermedias Economicas  Intermedias
- [889] Economicas  Caras       Intermedias Intermedias Caras       Intermedias
- [895] Caras       Economicas  Intermedias Intermedias Intermedias Economicas 
- [901] Intermedias Economicas  Economicas  Intermedias Economicas  Economicas 
- [907] Economicas  Intermedias Economicas  Caras       Intermedias Caras      
- [913] Caras       Caras       Economicas  Economicas  Economicas  Caras      
- [919] Economicas  Intermedias Economicas  Economicas  Caras       Economicas 
- [925] Economicas  Intermedias Caras       Caras       Intermedias Economicas 
- [931] Economicas  Economicas  Caras       Intermedias Economicas  Economicas 
- [937] Economicas  Intermedias Intermedias Caras       Economicas  Intermedias
- [943] Intermedias Intermedias Economicas  Intermedias Caras       Caras      
- [949] Intermedias Caras       Caras       Intermedias Intermedias Economicas 
- [955] Economicas  Caras       Caras       Intermedias Caras       Caras      
- [961] Intermedias Intermedias Intermedias Caras       Caras       Caras      
- [967] Economicas  Intermedias Economicas  Caras       Caras       Economicas 
- [973] Intermedias Economicas  Economicas  Caras       Caras       Caras      
- [979] Intermedias Economicas  Intermedias Intermedias Caras       Intermedias
- [985] Intermedias Intermedias Economicas  Caras       Economicas  Caras      
- [991] Intermedias Caras       Caras       Intermedias Caras       Caras      
- [997] Intermedias Economicas  Economicas  Economicas  Economicas  Caras      
-[1003] Economicas  Economicas  Economicas  Economicas  Intermedias Intermedias
-[1009] Intermedias Intermedias Caras       Intermedias Caras       Economicas 
-[1015] Economicas  Economicas  Economicas  Intermedias Intermedias Caras      
-[1021] Intermedias Caras       Caras       Caras       Intermedias Intermedias
-[1027] Intermedias Economicas  Economicas  Caras       Economicas  Intermedias
-[1033] Economicas  Caras       Economicas  Caras       Intermedias Economicas 
-[1039] Intermedias Intermedias Intermedias Economicas  Caras       Intermedias
-[1045] Intermedias Intermedias Intermedias Economicas  Caras       Intermedias
-[1051] Intermedias Intermedias Intermedias Economicas  Caras       Caras      
-[1057] Economicas  Economicas  Intermedias Economicas  Intermedias Intermedias
-[1063] Intermedias Intermedias Intermedias Caras       Caras       Economicas 
-[1069] Caras       Caras       Intermedias Intermedias Caras       Caras      
-[1075] Caras       Economicas  Caras       Caras       Caras       Economicas 
-[1081] Intermedias Caras       Economicas  Intermedias Economicas  Economicas 
-[1087] Economicas  Caras       Intermedias Caras       Economicas  Economicas 
-[1093] Economicas  Economicas  Intermedias Economicas  Economicas  Caras      
-[1099] Economicas  Economicas  Intermedias Intermedias Intermedias Economicas 
-[1105] Caras       Economicas  Caras       Intermedias Economicas  Caras      
-[1111] Intermedias Caras       Caras       Caras       Intermedias Intermedias
-[1117] Caras       Economicas  Caras       Economicas  Intermedias Caras      
-[1123] Caras       Caras       Economicas  Economicas  Economicas  Intermedias
-[1129] Economicas  Intermedias Economicas  Economicas  Caras       Intermedias
-[1135] Caras       Economicas  Caras       Economicas  Economicas  Intermedias
-[1141] Caras       Caras       Intermedias Intermedias Intermedias Economicas 
-[1147] Caras       Caras       Caras       Economicas  Caras       Economicas 
-[1153] Economicas  Caras       Caras       Intermedias Economicas  Caras      
-[1159] Caras       Intermedias Economicas  Economicas  Intermedias Economicas 
-[1165] Intermedias Intermedias Caras       Intermedias Economicas  Caras      
-[1171] Economicas  Intermedias Intermedias Intermedias Economicas  Caras      
-[1177] Intermedias Caras       Caras       Caras       Intermedias Economicas 
-[1183] Caras       Economicas  Economicas  Intermedias Caras       Intermedias
-[1189] Economicas  Intermedias Intermedias Caras       Caras       Intermedias
-[1195] Intermedias
-Levels: Caras Economicas Intermedias</code></pre>
+<pre><code>
+Call:
+NULL
+
+Deviance Residuals: 
+      Min         1Q     Median         3Q        Max  
+-5.96e-05  -2.00e-08  -2.00e-08   2.00e-08   5.70e-05  
+
+Coefficients: (18 not defined because of singularities)
+                      Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)           3.39e+02   4.76e+07       0        1
+SalePrice             1.29e+02   1.41e+05       0        1
+LotFrontage           9.04e+00   6.55e+04       0        1
+LotArea               6.11e-01   1.50e+05       0        1
+OverallQual          -1.55e-01   8.20e+04       0        1
+OverallCond          -5.26e+00   8.28e+04       0        1
+MasVnrArea            2.45e-01   7.84e+04       0        1
+BsmtFinSF1           -6.99e+00   2.25e+05       0        1
+BsmtFinSF2           -3.48e+00   1.31e+05       0        1
+BsmtUnfSF             1.33e+00   2.53e+05       0        1
+TotalBsmtSF                 NA         NA      NA       NA
+X1stFlrSF            -1.35e+01   1.81e+05       0        1
+X2ndFlrSF            -6.66e+00   1.67e+05       0        1
+LowQualFinSF          8.37e+00   6.08e+04       0        1
+GrLivArea                   NA         NA      NA       NA
+BsmtFullBath         -2.31e+00   4.43e+04       0        1
+BsmtHalfBath          4.02e+00   3.05e+04       0        1
+FullBath             -5.59e+00   8.85e+04       0        1
+HalfBath              8.44e+00   1.01e+05       0        1
+BedroomAbvGr         -6.17e+00   6.07e+04       0        1
+KitchenAbvGr          4.76e+00   4.56e+05       0        1
+TotRmsAbvGrd          2.05e+00   1.20e+05       0        1
+Fireplaces           -4.57e+00   6.35e+04       0        1
+GarageCars           -5.53e+00   1.30e+05       0        1
+GarageArea            6.97e+00   1.13e+05       0        1
+WoodDeckSF           -3.62e+00   3.29e+04       0        1
+OpenPorchSF           2.96e+00   4.62e+04       0        1
+EnclosedPorch        -2.31e+00   4.31e+04       0        1
+X3SsnPorch           -2.53e+00   7.23e+04       0        1
+ScreenPorch          -6.27e+00   6.99e+04       0        1
+PoolArea             -1.14e-01   1.02e+05       0        1
+MiscVal               4.81e+00   7.75e+04       0        1
+MSZoningFV           -5.53e+01   8.69e+05       0        1
+MSZoningRH           -3.85e+01   9.93e+05       0        1
+MSZoningRL           -6.16e+01   9.38e+05       0        1
+MSZoningRM           -4.35e+01   1.02e+06       0        1
+StreetPave           -1.31e+00   1.29e+06       0        1
+LandContourHLS       -1.50e+01   3.16e+05       0        1
+LandContourLow       -3.93e+01   7.33e+05       0        1
+LandContourLvl       -2.53e+01   3.17e+05       0        1
+LotConfigCulDSac     -1.24e+01   3.38e+05       0        1
+LotConfigFR2         -2.35e+01   1.57e+05       0        1
+LotConfigFR3         -8.70e-01   4.07e+05       0        1
+LotConfigInside      -1.50e+01   9.42e+04       0        1
+LandSlopeMod          7.59e+00   5.94e+05       0        1
+LandSlopeSev          9.60e+01   1.06e+06       0        1
+NeighborhoodBlueste   6.75e+01   8.65e+05       0        1
+NeighborhoodBrDale    8.32e+01   1.05e+06       0        1
+NeighborhoodBrkSide   4.71e+01   5.35e+05       0        1
+NeighborhoodClearCr   5.69e+01   7.96e+05       0        1
+NeighborhoodCollgCr   5.77e+01   2.14e+05       0        1
+NeighborhoodCrawfor   4.46e+01   7.45e+05       0        1
+NeighborhoodEdwards   2.80e+01   2.49e+05       0        1
+NeighborhoodGilbert   1.72e+01   2.96e+05       0        1
+NeighborhoodIDOTRR    5.21e+01   6.38e+05       0        1
+NeighborhoodMeadowV   1.44e+02   9.08e+05       0        1
+NeighborhoodMitchel   7.11e+01   4.50e+05       0        1
+NeighborhoodNAmes     3.25e+01   3.26e+05       0        1
+NeighborhoodNoRidge   2.53e+01   2.80e+05       0        1
+NeighborhoodNPkVill   1.51e+02   9.19e+05       0        1
+NeighborhoodNridgHt   4.72e+01   2.33e+05       0        1
+NeighborhoodNWAmes    4.96e+01   4.39e+05       0        1
+NeighborhoodOldTown   3.07e+01   5.46e+05       0        1
+NeighborhoodSawyer    6.20e+01   5.42e+05       0        1
+NeighborhoodSawyerW   4.33e+01   3.37e+05       0        1
+NeighborhoodSomerst   2.72e+01   4.64e+05       0        1
+NeighborhoodStoneBr   9.90e+01   3.72e+05       0        1
+NeighborhoodSWISU     4.58e+01   7.82e+05       0        1
+NeighborhoodTimber    4.64e+01   3.63e+05       0        1
+NeighborhoodVeenker   6.16e+01   7.03e+05       0        1
+Condition1Feedr      -2.77e+01   5.88e+05       0        1
+Condition1Norm       -1.67e+01   4.51e+05       0        1
+Condition1PosA       -9.44e+01   1.34e+06       0        1
+Condition1PosN        4.66e+01   6.76e+05       0        1
+Condition1RRAe        1.93e+01   6.26e+05       0        1
+Condition1RRAn       -6.10e+01   5.93e+05       0        1
+Condition1RRNe              NA         NA      NA       NA
+Condition1RRNn       -4.72e+01   4.75e+07       0        1
+BldgType2fmCon       -3.74e+01   9.88e+05       0        1
+BldgTypeDuplex       -1.71e+01   2.14e+06       0        1
+BldgTypeTwnhs         1.28e+01   1.93e+05       0        1
+BldgTypeTwnhsE        4.98e+00   1.28e+05       0        1
+HouseStyle1.5Unf     -3.38e+01   8.04e+05       0        1
+HouseStyle1Story     -7.61e+00   3.46e+05       0        1
+HouseStyle2.5Fin     -8.82e+01   1.14e+06       0        1
+HouseStyle2.5Unf     -7.62e+01   2.27e+06       0        1
+HouseStyle2Story     -2.91e+01   3.28e+05       0        1
+HouseStyleSFoyer      2.83e+01   6.96e+05       0        1
+HouseStyleSLvl       -3.27e+01   6.68e+05       0        1
+YearRemodAdd1951      4.06e+01   5.31e+05       0        1
+YearRemodAdd1952      7.88e+01   1.37e+06       0        1
+YearRemodAdd1953     -1.11e+01   1.32e+06       0        1
+YearRemodAdd1954     -5.34e+01   1.39e+06       0        1
+YearRemodAdd1955      2.11e+01   1.62e+06       0        1
+YearRemodAdd1956      3.22e+01   3.97e+05       0        1
+YearRemodAdd1957      5.32e+01   6.39e+05       0        1
+YearRemodAdd1958     -5.02e+00   5.07e+05       0        1
+YearRemodAdd1959     -2.56e+01   7.70e+05       0        1
+YearRemodAdd1960      5.45e+01   1.14e+06       0        1
+YearRemodAdd1961      2.91e+01   1.53e+06       0        1
+YearRemodAdd1962     -5.53e+01   9.72e+05       0        1
+YearRemodAdd1963     -5.17e+01   8.54e+05       0        1
+YearRemodAdd1964     -1.64e+01   5.85e+05       0        1
+YearRemodAdd1965      2.13e+01   4.96e+05       0        1
+YearRemodAdd1966     -4.53e+01   5.02e+05       0        1
+YearRemodAdd1967      3.85e+01   6.60e+05       0        1
+YearRemodAdd1968      2.87e+01   6.97e+05       0        1
+YearRemodAdd1969     -1.24e+01   4.13e+05       0        1
+YearRemodAdd1970      1.36e+01   7.11e+05       0        1
+YearRemodAdd1971      2.42e+01   7.73e+05       0        1
+YearRemodAdd1972     -5.39e+00   4.85e+05       0        1
+YearRemodAdd1973     -1.55e+01   4.65e+05       0        1
+YearRemodAdd1974     -5.62e+01   7.72e+05       0        1
+YearRemodAdd1975     -6.34e+00   3.93e+05       0        1
+YearRemodAdd1976     -3.16e+01   4.94e+05       0        1
+YearRemodAdd1977     -4.24e+01   7.48e+05       0        1
+YearRemodAdd1978      9.80e+00   7.45e+05       0        1
+YearRemodAdd1979      2.31e+01   6.75e+05       0        1
+YearRemodAdd1980      1.84e+01   6.36e+05       0        1
+YearRemodAdd1981      1.05e+01   7.12e+05       0        1
+YearRemodAdd1982     -1.69e+01   8.01e+05       0        1
+YearRemodAdd1983     -3.82e+01   6.80e+05       0        1
+YearRemodAdd1984      4.50e+01   9.58e+05       0        1
+YearRemodAdd1985      3.33e+00   5.32e+05       0        1
+YearRemodAdd1986     -3.16e+01   4.75e+07       0        1
+YearRemodAdd1987     -3.27e+01   6.72e+05       0        1
+YearRemodAdd1988      2.24e+01   4.21e+05       0        1
+YearRemodAdd1989      8.87e+00   6.66e+05       0        1
+YearRemodAdd1990      2.94e+01   4.05e+05       0        1
+YearRemodAdd1991      8.42e+00   6.68e+05       0        1
+YearRemodAdd1992      1.53e+01   5.41e+05       0        1
+YearRemodAdd1993     -2.13e+01   5.74e+05       0        1
+YearRemodAdd1994      1.52e+01   5.65e+05       0        1
+YearRemodAdd1995     -7.80e+00   4.40e+05       0        1
+YearRemodAdd1996     -1.69e+01   3.75e+05       0        1
+YearRemodAdd1997      1.69e+01   4.72e+05       0        1
+YearRemodAdd1998      1.93e+01   4.15e+05       0        1
+YearRemodAdd1999     -1.81e+01   3.93e+05       0        1
+YearRemodAdd2000      2.63e+00   4.68e+05       0        1
+YearRemodAdd2001      4.34e-01   4.95e+05       0        1
+YearRemodAdd2002      3.10e+01   3.72e+05       0        1
+YearRemodAdd2003      1.74e+01   4.39e+05       0        1
+YearRemodAdd2004     -5.74e+00   3.87e+05       0        1
+YearRemodAdd2005      1.70e+01   4.28e+05       0        1
+YearRemodAdd2006      1.35e+01   4.08e+05       0        1
+YearRemodAdd2007      2.35e+01   4.20e+05       0        1
+YearRemodAdd2008      1.84e+01   4.15e+05       0        1
+YearRemodAdd2009      1.91e+01   4.73e+05       0        1
+YearRemodAdd2010      4.60e+00   5.15e+05       0        1
+RoofStyleGable        8.00e+01   1.15e+06       0        1
+RoofStyleGambrel      1.33e+02   3.29e+06       0        1
+RoofStyleHip          8.50e+01   1.15e+06       0        1
+RoofStyleMansard     -6.90e-01   4.75e+07       0        1
+RoofStyleShed               NA         NA      NA       NA
+RoofMatlCompShg      -1.43e+02   2.56e+06       0        1
+RoofMatlMembran      -1.79e+02   4.27e+06       0        1
+RoofMatlMetal               NA         NA      NA       NA
+RoofMatlRoll         -1.60e+02   2.82e+06       0        1
+`RoofMatlTar&amp;Grv`    -8.83e+01   3.07e+06       0        1
+RoofMatlWdShake      -1.57e+02   4.75e+07       0        1
+RoofMatlWdShngl      -2.79e+02   2.81e+06       0        1
+Exterior1stAsphShn          NA         NA      NA       NA
+Exterior1stBrkComm          NA         NA      NA       NA
+Exterior1stBrkFace    2.07e-01   2.97e+06       0        1
+Exterior1stCBlock    -2.41e+01   1.24e+06       0        1
+Exterior1stCemntBd    1.68e+02   3.22e+06       0        1
+Exterior1stHdBoard   -8.77e+00   3.20e+06       0        1
+Exterior1stImStucc    1.86e+02   3.60e+06       0        1
+Exterior1stMetalSd   -3.76e+01   3.36e+06       0        1
+Exterior1stPlywood    4.68e-01   3.31e+06       0        1
+Exterior1stStone            NA         NA      NA       NA
+Exterior1stStucco     8.42e+00   3.25e+06       0        1
+Exterior1stVinylSd   -4.24e+01   3.22e+06       0        1
+`Exterior1stWd Sdng`  5.13e+00   3.25e+06       0        1
+Exterior1stWdShing    3.03e+01   3.27e+06       0        1
+Exterior2ndAsphShn   -7.73e+01   4.76e+07       0        1
+`Exterior2ndBrk Cmn` -8.70e+01   3.15e+06       0        1
+Exterior2ndBrkFace   -9.04e+01   2.94e+06       0        1
+Exterior2ndCBlock           NA         NA      NA       NA
+Exterior2ndCmentBd   -2.65e+02   3.18e+06       0        1
+Exterior2ndHdBoard   -6.07e+01   3.12e+06       0        1
+Exterior2ndImStucc   -2.75e+02   3.48e+06       0        1
+Exterior2ndMetalSd   -1.09e+01   3.32e+06       0        1
+Exterior2ndOther     -2.40e+02   3.28e+06       0        1
+Exterior2ndPlywood   -5.71e+01   3.13e+06       0        1
+Exterior2ndStone            NA         NA      NA       NA
+Exterior2ndStucco    -3.73e+01   2.74e+06       0        1
+Exterior2ndVinylSd   -3.49e+01   3.15e+06       0        1
+`Exterior2ndWd Sdng` -8.15e+01   3.11e+06       0        1
+`Exterior2ndWd Shng` -1.02e+02   3.08e+06       0        1
+MasVnrTypeBrkFace     5.48e+01   1.27e+06       0        1
+MasVnrTypeNone        3.69e+01   1.26e+06       0        1
+MasVnrTypeStone       5.72e+01   1.31e+06       0        1
+ExterQualFa           4.25e+01   7.19e+05       0        1
+ExterQualGd           4.46e+01   3.75e+05       0        1
+ExterQualTA           3.52e+01   5.38e+05       0        1
+ExterCondFa           2.66e+01   4.75e+07       0        1
+ExterCondGd           5.31e+01   4.75e+07       0        1
+ExterCondPo                 NA         NA      NA       NA
+ExterCondTA           6.80e+01   4.75e+07       0        1
+FoundationCBlock     -2.29e+01   2.86e+05       0        1
+FoundationPConc      -1.30e+01   3.68e+05       0        1
+FoundationSlab              NA         NA      NA       NA
+FoundationStone      -1.99e+01   2.24e+06       0        1
+FoundationWood        6.00e+00   1.15e+06       0        1
+BsmtQualFa            8.89e+01   3.68e+05       0        1
+BsmtQualGd            4.31e+01   2.07e+05       0        1
+BsmtQualTA            6.20e+01   2.92e+05       0        1
+BsmtCondGd            1.90e+00   3.30e+05       0        1
+BsmtCondPo            1.01e+01   2.49e+06       0        1
+BsmtCondTA           -2.50e+01   3.31e+05       0        1
+BsmtExposureGd        3.43e+01   1.47e+05       0        1
+BsmtExposureMn       -8.43e-01   1.41e+05       0        1
+BsmtExposureNo        1.27e+00   8.39e+04       0        1
+BsmtFinType1BLQ      -2.81e+00   1.94e+05       0        1
+BsmtFinType1GLQ      -2.97e+01   1.23e+05       0        1
+BsmtFinType1LwQ      -2.13e+01   2.88e+05       0        1
+BsmtFinType1Rec      -2.54e+00   1.85e+05       0        1
+BsmtFinType1Unf      -2.61e+01   1.73e+05       0        1
+BsmtFinType2BLQ       2.78e+01   7.40e+05       0        1
+BsmtFinType2GLQ      -7.75e+00   6.54e+05       0        1
+BsmtFinType2LwQ       1.70e+01   6.89e+05       0        1
+BsmtFinType2Rec       6.27e+00   8.01e+05       0        1
+BsmtFinType2Unf       1.92e-01   7.10e+05       0        1
+HeatingGasA          -2.65e+02   1.67e+06       0        1
+HeatingGasW          -2.65e+02   1.64e+06       0        1
+HeatingGrav                 NA         NA      NA       NA
+HeatingOthW                 NA         NA      NA       NA
+HeatingWall                 NA         NA      NA       NA
+HeatingQCFa          -4.12e+01   6.67e+05       0        1
+HeatingQCGd          -1.25e+01   1.19e+05       0        1
+HeatingQCPo           2.40e+00   8.33e+05       0        1
+HeatingQCTA           5.67e+00   1.96e+05       0        1
+CentralAirY          -4.21e+01   6.37e+05       0        1
+ElectricalFuseF       5.76e+01   6.49e+05       0        1
+ElectricalFuseP       6.15e+01   1.25e+06       0        1
+ElectricalMix               NA         NA      NA       NA
+ElectricalSBrkr       2.64e+01   2.32e+05       0        1
+KitchenQualFa        -1.82e+01   5.04e+05       0        1
+KitchenQualGd         3.41e+01   2.13e+05       0        1
+KitchenQualTA         3.62e+01   2.69e+05       0        1
+FunctionalMaj2       -2.84e+01   1.44e+06       0        1
+FunctionalMin1       -4.47e+01   9.55e+05       0        1
+FunctionalMin2       -3.45e+00   1.18e+06       0        1
+FunctionalMod        -6.07e+01   2.06e+06       0        1
+FunctionalSev               NA         NA      NA       NA
+FunctionalTyp        -3.53e+01   9.85e+05       0        1
+GarageTypeAttchd      2.24e+01   1.23e+06       0        1
+GarageTypeBasment     1.78e+01   1.18e+06       0        1
+GarageTypeBuiltIn     6.34e+01   1.24e+06       0        1
+GarageTypeCarPort     6.17e+01   2.87e+06       0        1
+GarageTypeDetchd      7.43e-01   1.27e+06       0        1
+GarageFinishRFn      -6.23e+00   1.02e+05       0        1
+GarageFinishUnf       2.95e+00   1.92e+05       0        1
+GarageQualFa         -2.89e+01   1.20e+06       0        1
+GarageQualGd          1.55e+00   1.53e+06       0        1
+GarageQualPo          5.11e+01   4.61e+06       0        1
+GarageQualTA         -7.86e+00   1.35e+06       0        1
+GarageCondFa          5.24e+01   4.04e+05       0        1
+GarageCondGd         -4.29e+00   9.74e+05       0        1
+GarageCondPo          5.25e+00   2.84e+06       0        1
+GarageCondTA                NA         NA      NA       NA
+PavedDriveP          -2.96e+01   8.04e+05       0        1
+PavedDriveY          -1.46e+01   3.44e+05       0        1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 9.8328e+02  on 764  degrees of freedom
+Residual deviance: 4.1550e-08  on 519  degrees of freedom
+AIC: 492
+
+Number of Fisher Scoring iterations: 25</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># precio &lt;- data.frame(dummy(datosT$clasificacion))</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># precio</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-</section>
-<section id="árbol-de-clasificación" class="level2">
-<h2 class="anchored" data-anchor-id="árbol-de-clasificación">5. Árbol de clasificación</h2>
+<p>El modelo indica la significancia de las variable con un *</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datosT), <span class="fu">nrow</span>(datosT) <span class="sc">*</span> porcentaje)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datosT[corte, ]</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datosT[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>variables_significativas <span class="ot">&lt;-</span> model_summary<span class="sc">$</span>coefficients[model_summary<span class="sc">$</span>coefficients[, <span class="dv">4</span>] <span class="sc">&lt;</span> <span class="fl">0.01</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>columnas_significativas <span class="ot">&lt;-</span> <span class="fu">rownames</span>(variables_significativas[<span class="fu">order</span>(<span class="fu">abs</span>(variables_significativas[, <span class="dv">1</span>]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>columnas_significativas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
 </div>
+</div>
+<p>Como se puede observar al tener el modelo con todas las variables se obteiene que ninguna variable es significativa, por lo tanto se procede a realizar el modelo con las variables numericas y variables que se consideran significativas.</p>
+</section>
+<section id="análisis-de-correlación-y-ajuste-de-modelo" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-de-correlación-y-ajuste-de-modelo">1.5.1 Análisis de correlación y ajuste de modelo</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">subset</span>(train, <span class="at">select =</span> <span class="sc">-</span>SalePrice)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>multi_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"TotalBsmtSF"</span>,<span class="st">"HouseStyle"</span>,<span class="st">"BsmtQual"</span>,<span class="st">"Neighborhood"</span>, <span class="st">"clasificacion"</span>, <span class="st">"MiscFeature"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> train[, multi_variables]</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>new_decision_tree <span class="ot">&lt;-</span> <span class="fu">rpart</span>(<span class="at">formula =</span> clasificacion <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"class"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(new_decision_tree, <span class="at">box.palette =</span> <span class="st">"green"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>datos_cor <span class="ot">&lt;-</span> datos_con_dummy[, numeric_variables]</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>datos_cor <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_cor, <span class="sc">-</span>SalePrice)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>correlacion <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_cor)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(correlacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>y2pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(new_decision_tree, <span class="at">newdata =</span> test)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>y2pred<span class="ot">&lt;-</span><span class="fu">apply</span>(y2pred, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="fu">colnames</span>(y2pred)[<span class="fu">which.max</span>(x)])</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>y2pred <span class="ot">&lt;-</span> <span class="fu">factor</span>(y2pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="métrica-de-desempeño-del-árbol" class="level3">
-<h3 class="anchored" data-anchor-id="métrica-de-desempeño-del-árbol">5.3 Métrica de desempeño del árbol</h3>
-<p>Se decidió usar recall, porque se consideró que era más costoso identificar una casa cara como barata por sus implicaciones.</p>
+<p>Existe correlación entre las siguientes variables:</p>
+<ul>
+<li>LotFrontage: LotArea, TotalBsmtSF, X1stFlrSF</li>
+<li>LotArea: LotFrontage, TotalBsmtSF, GrLivArea</li>
+<li>OverallQual: TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, GarageCars, GarageArea</li>
+<li>BsmtFinSF1: BsmtUnfSF, BsmtFullBath</li>
+<li>BsmtUnfSF: BsmtFinSF1</li>
+<li>TotalsmtSF: X1stFlrSF</li>
+<li>X1stFlrSF: TotalBsmtSF</li>
+<li>X2ndFlrSF: GrLivArea</li>
+<li>GrLivArea: X2ndFlrSF, TotRmsAbvGrd</li>
+<li>BsmtFullBath: BsmtFinSF1</li>
+<li>BedRoomAvGr: TotRmsAbvGr</li>
+<li>TotRmsAbvGrd: OverallQual, X2ndFlrSF, FullBath, BedroomAbvGr</li>
+<li>FirePlaces: OverallQual, X1stFlrSF, GrLivArea</li>
+<li>GarageCars: OverallQual, TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, TotRmsAbvGrd, GarageArea</li>
+<li>GarageArea: OverallQual, TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, TotRmsAbvGrd, GarageCars</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">&lt;-</span> <span class="fu">table</span>(test<span class="sc">$</span>clasificacion, y2pred)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>tp <span class="ot">&lt;-</span> cm[<span class="dv">2</span>, <span class="dv">2</span>]  <span class="co"># true positives Casa este etiquetada bien cara / cara</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>tn <span class="ot">&lt;-</span> cm[<span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># true negatives Casa esta etiquetada bien barata / barata</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> cm[<span class="dv">1</span>, <span class="dv">2</span>]  <span class="co"># false positives Casa etiquetada como cara / barata</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> cm[<span class="dv">2</span>, <span class="dv">1</span>]  <span class="co"># false negatives Casa etiquetada como barata / cara</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>recall <span class="ot">&lt;-</span> tp <span class="sc">/</span> (tp <span class="sc">+</span> fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
-<p>El recall del árbol de clasificación inicial es 0.9896907. Esto nos indica que el modelo es un buen identificador casos positivos, pero aun puede que no sea muy bueno para identificar falsos positivos. Esto puede causar que casas que son baratas sean clasificadas como caras y no se lleguen a vender. Pero también indica que es poco probable que clasifiquen casas caras como baratas, evitando desinformación.</p>
-</section>
-<section id="matriz-de-confusión" class="level3">
-<h3 class="anchored" data-anchor-id="matriz-de-confusión">5.3 Matriz de confusión</h3>
+</div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>confusion_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="at">reference =</span> test<span class="sc">$</span>clasificacion, <span class="at">data =</span> y2pred)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>confusion_matrix<span class="sc">$</span>table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>             Reference
-Prediction    Caras Economicas Intermedias
-  Caras         103          1          16
-  Economicas      0         96          20
-  Intermedias    19         24          80</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cm<span class="ot">&lt;-</span>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(y2pred,test<span class="sc">$</span>clasificacion)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>cm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
-             Reference
-Prediction    Caras Economicas Intermedias
-  Caras         103          1          16
-  Economicas      0         96          20
-  Intermedias    19         24          80
-
-Overall Statistics
+          Reference
+Prediction   0   1
+         0 185  13
+         1  33  98
                                           
-               Accuracy : 0.7772          
-                 95% CI : (0.7305, 0.8192)
-    No Information Rate : 0.3398          
+               Accuracy : 0.8602          
+                 95% CI : (0.8179, 0.8958)
+    No Information Rate : 0.6626          
+    P-Value [Acc &gt; NIR] : 3.098e-16       
+                                          
+                  Kappa : 0.7005          
+                                          
+ Mcnemar's Test P-Value : 0.005088        
+                                          
+            Sensitivity : 0.8486          
+            Specificity : 0.8829          
+         Pos Pred Value : 0.9343          
+         Neg Pred Value : 0.7481          
+             Prevalence : 0.6626          
+         Detection Rate : 0.5623          
+   Detection Prevalence : 0.6018          
+      Balanced Accuracy : 0.8658          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+<p>Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.87. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train &lt;- train[, numeric_variables2]</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in makeTask(type = type, data = data, weights = weights,
+blocking = blocking, : Empty factor levels were dropped for columns:
+Condition1,RoofStyle,RoofMatl,Exterior1st,Exterior2nd,ExterCond,Foundation,Heating,Functional</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="MD_HDT6_files/figure-html/curva_de_aprendizaje-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Al tener el accuracy con un 86% y al observar las curvas de aprendizaje se puede concluir que el modelo tiene overfitting. La curva de balance de error en training siempre está en 0 y nunca converge con la curva de test. Con un accuracy tan alto y pocas variables significativas, se concluye lo mencionado.</p>
+</section>
+<section id="modelo-con-variables-numéricas" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-con-variables-numéricas">1.6 Modelo con variables numéricas</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>numeric_variables2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"LotFrontage"</span>, <span class="st">"LotArea"</span>, <span class="st">"OverallQual"</span>, <span class="st">"OverallCond"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtFinSF2"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"TotalBsmtSF"</span>, <span class="st">"X1stFlrSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"LowQualFinSF"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"BsmtHalfBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"HalfBath"</span>, <span class="st">"BedroomAbvGr"</span>, <span class="st">"KitchenAbvGr"</span>, <span class="st">"TotRmsAbvGrd"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"GarageCars"</span>, <span class="st">"GarageArea"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"EnclosedPorch"</span>, <span class="st">"X3SsnPorch"</span>, <span class="st">"ScreenPorch"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -SalePrice)</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -Utilities)</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> datos_con_dummy[, numeric_variables2]</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_num), <span class="fu">nrow</span>(datos_num) <span class="sc">*</span> porcentaje)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos_num[corte, ]</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_num[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading
+
+Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading
+
+Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading
+
+Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading
+
+Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading
+
+Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading
+
+Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading
+
+Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary, <span class="at">signif.stars =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+NULL
+
+Deviance Residuals: 
+   Min      1Q  Median      3Q     Max  
+-6.468  -0.235  -0.044   0.124   2.430  
+
+Coefficients: (2 not defined because of singularities)
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)    -2.5159     0.2754   -9.13  &lt; 2e-16 ***
+LotFrontage     0.0656     0.1780    0.37   0.7125    
+LotArea         0.4336     0.2955    1.47   0.1423    
+OverallQual     2.1617     0.3248    6.66  2.8e-11 ***
+OverallCond     0.2925     0.1995    1.47   0.1426    
+MasVnrArea     -0.2773     0.2099   -1.32   0.1866    
+BsmtFinSF1      1.1210     0.5076    2.21   0.0272 *  
+BsmtFinSF2      0.3277     0.2044    1.60   0.1088    
+BsmtUnfSF       1.2663     0.4724    2.68   0.0074 ** 
+TotalBsmtSF         NA         NA      NA       NA    
+X1stFlrSF       0.5993     0.4476    1.34   0.1806    
+X2ndFlrSF       0.9837     0.3927    2.50   0.0123 *  
+LowQualFinSF   -0.1850     0.3094   -0.60   0.5500    
+GrLivArea           NA         NA      NA       NA    
+BsmtFullBath    0.5332     0.2290    2.33   0.0199 *  
+BsmtHalfBath    0.1198     0.1493    0.80   0.4223    
+FullBath        0.7172     0.2474    2.90   0.0037 ** 
+HalfBath        0.3198     0.2341    1.37   0.1719    
+BedroomAbvGr   -0.0549     0.2476   -0.22   0.8244    
+KitchenAbvGr   -0.4582     0.2981   -1.54   0.1243    
+TotRmsAbvGrd    0.1111     0.3664    0.30   0.7616    
+Fireplaces      0.0876     0.1772    0.49   0.6208    
+GarageCars      0.3489     0.4230    0.82   0.4095    
+GarageArea      0.6500     0.4069    1.60   0.1102    
+WoodDeckSF      0.0218     0.1625    0.13   0.8930    
+OpenPorchSF     0.1952     0.1622    1.20   0.2290    
+EnclosedPorch  -0.3416     0.2063   -1.66   0.0977 .  
+X3SsnPorch      0.1160     0.1105    1.05   0.2936    
+ScreenPorch    -0.0355     0.1558   -0.23   0.8197    
+PoolArea       -0.9021     0.3051   -2.96   0.0031 ** 
+MiscVal         0.3412     0.1542    2.21   0.0269 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 983.28  on 764  degrees of freedom
+Residual deviance: 326.48  on 736  degrees of freedom
+AIC: 384.5
+
+Number of Fisher Scoring iterations: 7</code></pre>
+</div>
+</div>
+<p>Como se puede observar el modelo indica la significancia de las variable con un *, pero nosotros designamos las varibales que tienen un valor de significaia menor a 0.01, las cuales son:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>variables_significativas <span class="ot">&lt;-</span> model_summary<span class="sc">$</span>coefficients[model_summary<span class="sc">$</span>coefficients[, <span class="dv">4</span>] <span class="sc">&lt;</span> <span class="fl">0.01</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>columnas_significativas <span class="ot">&lt;-</span> <span class="fu">rownames</span>(variables_significativas[<span class="fu">order</span>(<span class="fu">abs</span>(variables_significativas[, <span class="dv">1</span>]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>columnas_significativas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "(Intercept)" "OverallQual" "BsmtUnfSF"   "PoolArea"    "FullBath"   </code></pre>
+</div>
+</div>
+<p>Como se puede hay varias variables que son significativas para el modelo, con lo que teniendo eliminadas las columnas que no aportan al modelo. Hay otras variables como TotalBsmtSF y GrLivArea que no aportan nada al modelo.</p>
+<section id="análisis-de-ajuste-de-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-de-ajuste-de-modelo">1.6.1 Análisis de ajuste de modelo</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 198  17
+         1  20  94
+                                          
+               Accuracy : 0.8875          
+                 95% CI : (0.8483, 0.9196)
+    No Information Rate : 0.6626          
     P-Value [Acc &gt; NIR] : &lt;2e-16          
                                           
-                  Kappa : 0.6658          
+                  Kappa : 0.7501          
                                           
- Mcnemar's Test P-Value : 0.6547          
-
-Statistics by Class:
-
-                     Class: Caras Class: Economicas Class: Intermedias
-Sensitivity                0.8443            0.7934             0.6897
-Specificity                0.9283            0.9160             0.8230
-Pos Pred Value             0.8583            0.8276             0.6504
-Neg Pred Value             0.9205            0.8971             0.8475
-Prevalence                 0.3398            0.3370             0.3231
-Detection Rate             0.2869            0.2674             0.2228
-Detection Prevalence       0.3343            0.3231             0.3426
-Balanced Accuracy          0.8863            0.8547             0.7564</code></pre>
+ Mcnemar's Test P-Value : 0.7423          
+                                          
+            Sensitivity : 0.9083          
+            Specificity : 0.8468          
+         Pos Pred Value : 0.9209          
+         Neg Pred Value : 0.8246          
+             Prevalence : 0.6626          
+         Detection Rate : 0.6018          
+   Detection Prevalence : 0.6535          
+      Balanced Accuracy : 0.8776          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
 </div>
 </div>
-</section>
-</section>
-<section id="naive-bayes" class="level2">
-<h2 class="anchored" data-anchor-id="naive-bayes">6. Naive Bayes</h2>
-<section id="regresión" class="level3">
-<h3 class="anchored" data-anchor-id="regresión">6.1 Regresión</h3>
-<section id="creación-del-modelo" class="level4">
-<h4 class="anchored" data-anchor-id="creación-del-modelo">6.1.1 Creación del modelo</h4>
+<p>Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.89. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos), <span class="fu">nrow</span>(datos) <span class="sc">*</span> porcentaje)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos[corte, ]</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(test, <span class="at">select =</span> <span class="sc">-</span>SalePrice)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      SalePrice LotFrontage    LotArea OverallQual OverallCond MasVnrArea
-502   0.5561523   0.2046119 -0.0189590   0.6250871  -0.5143269 -0.5539444
-558  -0.8710204  -0.4129446  0.1368073  -1.4930010   0.3975731 -0.5539444
-220  -0.1587566  -1.1128419 -0.8743516   0.6250871  -0.5143269 -0.4676466
-633  -1.1776160   0.6163162  0.2451008   0.6250871  -0.5143269  0.5733208
-239   1.6538849   0.9456797  0.2614708   1.3311165  -0.5143269  0.8160334
-1140 -0.4381795   1.1515318 -0.1539481  -0.7869717  -0.5143269 -0.5539444
-      BsmtFinSF1 BsmtFinSF2   BsmtUnfSF TotalBsmtSF   X1stFlrSF  X2ndFlrSF
-502  -0.05551204 -0.2789238 -0.27446762  -0.4286251 -0.75536367  1.2766539
-558   0.45536864 -0.2789238 -1.31279469  -0.9395180 -0.67507408  0.2128718
-220  -0.88326808 -0.2789238  1.43231036   0.4236068  0.23401126 -0.7957683
-633   0.85415736 -0.2789238 -0.05610699   0.7314811  0.65617910 -0.7957683
-239  -0.91775792 -0.2789238  2.46172475   1.4186210  1.38914535 -0.7957683
-1140  0.47261356 -0.2789238 -0.71118888  -0.3193074  0.02422234 -0.7957683
-     LowQualFinSF  GrLivArea BsmtFullBath BsmtHalfBath   FullBath   HalfBath
-502    -0.1292534  0.4849815   -0.7893309   -0.2322977  0.7870343  1.2646757
-558    -0.1292534 -0.3291376   -0.7893309   -0.2322977 -1.0251160  1.2646757
-220    -0.1292534 -0.4949766   -0.7893309   -0.2322977  0.7870343 -0.7370295
-633    -0.1292534 -0.1877974   -0.7893309   -0.2322977  0.7870343 -0.7370295
-239    -0.1292534  0.3455259   -0.7893309   -0.2322977  0.7870343 -0.7370295
-1140   -0.1292534 -0.6476239   -0.7893309   -0.2322977 -1.0251160 -0.7370295
-     BedroomAbvGr KitchenAbvGr TotRmsAbvGrd Fireplaces GarageCars GarageArea
-502     0.1653829   -0.2227381    0.2831806 -0.9113728  0.3050927  0.5925701
-558     0.1653829   -0.2227381    0.2831806 -0.9113728 -0.9786599  0.4435129
-220    -1.0698206   -0.2227381   -0.9429094 -0.9113728  0.3050927 -0.1527161
-633     0.1653829   -0.2227381   -0.3298644  0.6785403  0.3050927  0.3260738
-239     0.1653829   -0.2227381    0.2831806 -0.9113728  1.5888453  1.5637006
-1140    0.1653829   -0.2227381   -0.3298644  0.6785403  0.3050927  0.1047464
-     WoodDeckSF OpenPorchSF EnclosedPorch X3SsnPorch ScreenPorch    PoolArea
-502  -0.7432639  0.94887441    -0.3697025 -0.1089014  -0.2691504 -0.07066183
-558  -0.7432639  0.02151271     1.5722512 -0.1089014  -0.2691504 -0.07066183
-220   0.1530699 -0.69301189    -0.3697025 -0.1089014  -0.2691504 -0.07066183
-633   0.8502183 -0.69301189    -0.3697025 -0.1089014  -0.2691504 -0.07066183
-239   0.6510330  2.77319253    -0.3697025 -0.1089014  -0.2691504 -0.07066183
-1140 -0.7432639 -0.69301189     3.1258142 -0.1089014   1.9761804 -0.07066183
-        MiscVal   Id MSSubClass MSZoning Street Alley LotShape LandContour
-502  -0.1346564  502         60       FV   Pave  &lt;NA&gt;      Reg         Lvl
-558  -0.1346564  558         50  C (all)   Pave  &lt;NA&gt;      Reg         Low
-220  -0.1346564  220        120       RL   Pave  &lt;NA&gt;      Reg         Lvl
-633  -0.1346564  633         20       RL   Pave  &lt;NA&gt;      Reg         Lvl
-239  -0.1346564  239         20       RL   Pave  &lt;NA&gt;      Reg         Lvl
-1140 -0.1346564 1140         30       RL   Pave  &lt;NA&gt;      IR1         Lvl
-     Utilities LotConfig LandSlope Neighborhood Condition1 Condition2 BldgType
-502     AllPub    Inside       Gtl      Somerst       Norm       Norm     1Fam
-558     AllPub    Inside       Mod       IDOTRR       Norm       Norm     1Fam
-220     AllPub    Inside       Gtl      Blmngtn       Norm       Norm   TwnhsE
-633     AllPub    Inside       Gtl       NWAmes       Norm       Norm     1Fam
-239     AllPub    Inside       Gtl      NridgHt       Norm       Norm     1Fam
-1140    AllPub    Inside       Gtl      BrkSide       Norm       Norm     1Fam
-     HouseStyle YearBuilt YearRemodAdd RoofStyle RoofMatl Exterior1st
-502      2Story      2005         2005     Gable  CompShg     VinylSd
-558      1.5Fin      1920         1950     Gable  CompShg     MetalSd
-220      1Story      2005         2006     Gable  CompShg     VinylSd
-633      1Story      1977         1977       Hip  CompShg     Plywood
-239      1Story      2007         2007       Hip  CompShg     VinylSd
-1140     1Story      1920         1950     Gable  CompShg      Stucco
-     Exterior2nd MasVnrType ExterQual ExterCond Foundation BsmtQual BsmtCond
-502      VinylSd       None        Gd        TA      PConc       Gd       TA
-558      MetalSd       None        TA        TA     CBlock       TA       TA
-220      VinylSd    BrkFace        Gd        TA      PConc       Gd       TA
-633      Plywood    BrkFace        TA        Gd     CBlock       TA       TA
-239      VinylSd    BrkFace        Ex        TA      PConc       Ex       TA
-1140      Stucco       None        TA        Fa     BrkTil       TA       TA
-     BsmtExposure BsmtFinType1 BsmtFinType2 Heating HeatingQC CentralAir
-502            No          GLQ          Unf    GasA        Gd          Y
-558            No          Rec          Unf    GasA        Gd          Y
-220            Av          GLQ          Unf    GasA        Ex          Y
-633            No          ALQ          Unf    GasA        TA          Y
-239            No          Unf          Unf    GasA        Ex          Y
-1140           No          BLQ          Unf    GasA        TA          Y
-     Electrical KitchenQual Functional FireplaceQu GarageType GarageYrBlt
-502       SBrkr          Gd        Typ        &lt;NA&gt;     Attchd        2005
-558       SBrkr          TA        Typ        &lt;NA&gt;    CarPort        1994
-220       SBrkr          Gd        Typ        &lt;NA&gt;     Attchd        2005
-633       SBrkr          TA        Typ          TA     Attchd        1977
-239       SBrkr          Gd        Typ        &lt;NA&gt;     Attchd        2007
-1140      SBrkr          TA       Maj1          Gd     Detchd        1972
-     GarageFinish GarageQual GarageCond PavedDrive PoolQC Fence MiscFeature
-502           RFn         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
-558           Unf         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
-220           Fin         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
-633           Fin         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
-239           Fin         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
-1140          Unf         TA         TA          Y   &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;
-     MoSold YrSold SaleType SaleCondition
-502       2   2008       WD        Normal
-558       9   2006      COD        Normal
-220       3   2006      New       Partial
-633       4   2009       WD        Family
-239      12   2007      New       Partial
-1140      5   2007       WD        Normal</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>modeloNB<span class="ot">&lt;-</span><span class="fu">naiveBayes</span>(SalePrice<span class="sc">~</span>.,<span class="at">data=</span>train)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>predNB<span class="ot">&lt;-</span> <span class="fu">predict</span>(modeloNB,<span class="at">newdata =</span> test1)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>predNB<span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(predNB))</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(test<span class="sc">$</span>SalePrice, <span class="at">col=</span><span class="st">"red"</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(predNB, <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>EMA <span class="ot">&lt;-</span> <span class="fu">mean</span>(test<span class="sc">$</span>SalePrice<span class="sc">-</span>predNB, <span class="at">na.rm =</span> T)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>EMA</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.1137683</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mse <span class="ot">&lt;-</span> <span class="fu">mean</span>((predNB <span class="sc">-</span> test<span class="sc">$</span>SalePrice)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate SSE</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">sum</span>((predNB <span class="sc">-</span> test<span class="sc">$</span>SalePrice)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate TSS</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>TSS <span class="ot">&lt;-</span> <span class="fu">sum</span>((test<span class="sc">$</span>SalePrice <span class="sc">-</span> <span class="fu">mean</span>(test<span class="sc">$</span>SalePrice))<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate R-squared value</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>r2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> SSE <span class="sc">/</span> TSS</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>rmse <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(mse)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the results</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"R-squared:"</span>, r2, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>R-squared: 0.6501454 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"RMSE:"</span>, rmse, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>RMSE: 0.6176551 </code></pre>
+<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>En comparación del modelo de regresion lineal multiple con el de Naive Bayes obtuvimos que el mejor modelo es el de Naive Bayes ya que el <strong><em>RMSE</em></strong> que se obtiene con este modelo es menor siendo este un 0.59 sobre un 0.66 que se obtuvo con el modelo de regresion multiple. Indicando asi que el modelo de naive bayes tiene menor cantidad de errores para realizar predicciones sobre el precio de las viviendas.</p>
-<p>Por otro lado en comparacion con el arbol de regresion se obtuvieron <strong><em>R^2</em></strong> bastante similares con siendo estos 0.64 para el arbol y un 0.65 para el naive bayes. Esto indica que ambos modelos son bastante similares para realizar predicciones sobre el precio de las viviendas, pero el modelo de Naive Bayes es mejor.</p>
+<p>Al tener el accuracy con un 89% y al observar las curvas de aprendizaje se puede concluir que el modelo tiene NO tiene overfitting. La curva de balance de error en training y de test convergen en cierto punto y se quedan relativamente constantes. Esto es lo que indica que tanto test como train son similares, por lo que es probable que NO haya overfitting con las variables numéricas únicamente.</p>
 </section>
-</section>
-<section id="clasificación" class="level3">
-<h3 class="anchored" data-anchor-id="clasificación">6.2 Clasificación</h3>
-<section id="división-de-datos-en-categorías" class="level4">
-<h4 class="anchored" data-anchor-id="división-de-datos-en-categorías">6.2.1 División de datos en categorías</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos<span class="sc">$</span>SalePrice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>       V1         
- Min.   :-1.7499  
- 1st Qu.:-0.6366  
- Median :-0.2578  
- Mean   : 0.0000  
- 3rd Qu.: 0.3974  
- Max.   : 6.9081  </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>p33 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.33</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>p66 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(datos<span class="sc">$</span>SalePrice, <span class="fl">0.66</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">clasificacion =</span> <span class="fu">ifelse</span>(datos<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p33, <span class="st">"Economicas"</span>,</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ifelse</span>(datos<span class="sc">$</span>SalePrice <span class="sc">&lt;</span> p66, <span class="st">"Intermedias"</span>,</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Caras"</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>clasificacion <span class="ot">&lt;-</span> <span class="fu">factor</span>(datos<span class="sc">$</span>clasificacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos), <span class="fu">nrow</span>(datos) <span class="sc">*</span> porcentaje)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos[corte, ]</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="predicción-y-evaluación-de-modelo" class="level4">
-<h4 class="anchored" data-anchor-id="predicción-y-evaluación-de-modelo">6.2.2 Predicción y evaluación de modelo</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>modelo<span class="ot">&lt;-</span><span class="fu">naiveBayes</span>(train<span class="sc">$</span>clasificacion<span class="sc">~</span>., <span class="at">data=</span>train)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(test, <span class="at">select =</span> <span class="sc">-</span>clasificacion)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>predBayes<span class="ot">&lt;-</span><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> test1)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>cm<span class="ot">&lt;-</span>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(predBayes,test<span class="sc">$</span>clasificacion)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>cm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Confusion Matrix and Statistics
-
-             Reference
-Prediction    Caras Economicas Intermedias
-  Caras         108          0          18
-  Economicas      0        112          40
-  Intermedias    14          9          58
-
-Overall Statistics
-                                          
-               Accuracy : 0.7744          
-                 95% CI : (0.7276, 0.8166)
-    No Information Rate : 0.3398          
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.6608          
-                                          
- Mcnemar's Test P-Value : NA              
-
-Statistics by Class:
-
-                     Class: Caras Class: Economicas Class: Intermedias
-Sensitivity                0.8852            0.9256             0.5000
-Specificity                0.9241            0.8319             0.9053
-Pos Pred Value             0.8571            0.7368             0.7160
-Neg Pred Value             0.9399            0.9565             0.7914
-Prevalence                 0.3398            0.3370             0.3231
-Detection Rate             0.3008            0.3120             0.1616
-Detection Prevalence       0.3510            0.4234             0.2256
-Balanced Accuracy          0.9046            0.8788             0.7027</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>tp <span class="ot">&lt;-</span> cm<span class="sc">$</span>table[<span class="dv">2</span>, <span class="dv">2</span>]  <span class="co"># true positives Casa este etiquetada bien cara / cara</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>tn <span class="ot">&lt;-</span> cm<span class="sc">$</span>table[<span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># true negatives Casa esta etiquetada bien barata / barata</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> cm<span class="sc">$</span>table[<span class="dv">1</span>, <span class="dv">2</span>]  <span class="co"># false positives Casa etiquetada como cara / barata</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> cm<span class="sc">$</span>table[<span class="dv">2</span>, <span class="dv">1</span>]  <span class="co"># false negatives Casa etiquetada como barata / cara</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>recall <span class="ot">&lt;-</span> tp <span class="sc">/</span> (tp <span class="sc">+</span> fn)</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>recall</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1</code></pre>
-</div>
-</div>
-</section>
-<section id="cross-validation" class="level4">
-<h4 class="anchored" data-anchor-id="cross-validation">6.2.3 Cross validation</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>train_without_pred_variable <span class="ot">&lt;-</span> <span class="fu">subset</span>(train, <span class="at">select =</span> <span class="sc">-</span>clasificacion)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>train_without_pred_variable <span class="ot">=</span> train_without_pred_variable[, numeric_variables]</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>,<span class="at">number=</span><span class="dv">10</span>, <span class="at">verboseIter=</span>T)</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>modelo3 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(train_without_pred_variable, train<span class="sc">$</span>clasificacion, <span class="at">trControl =</span> ct, <span class="at">method=</span><span class="st">"naive_bayes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>+ Fold01: usekernel= TRUE, laplace=0, adjust=1 
-- Fold01: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold01: usekernel=FALSE, laplace=0, adjust=1 
-- Fold01: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold02: usekernel= TRUE, laplace=0, adjust=1 
-- Fold02: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold02: usekernel=FALSE, laplace=0, adjust=1 
-- Fold02: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold03: usekernel= TRUE, laplace=0, adjust=1 
-- Fold03: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold03: usekernel=FALSE, laplace=0, adjust=1 
-- Fold03: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold04: usekernel= TRUE, laplace=0, adjust=1 
-- Fold04: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold04: usekernel=FALSE, laplace=0, adjust=1 
-- Fold04: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold05: usekernel= TRUE, laplace=0, adjust=1 
-- Fold05: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold05: usekernel=FALSE, laplace=0, adjust=1 
-- Fold05: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold06: usekernel= TRUE, laplace=0, adjust=1 
-- Fold06: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold06: usekernel=FALSE, laplace=0, adjust=1 
-- Fold06: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold07: usekernel= TRUE, laplace=0, adjust=1 
-- Fold07: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold07: usekernel=FALSE, laplace=0, adjust=1 
-- Fold07: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold08: usekernel= TRUE, laplace=0, adjust=1 
-- Fold08: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold08: usekernel=FALSE, laplace=0, adjust=1 
-- Fold08: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold09: usekernel= TRUE, laplace=0, adjust=1 
-- Fold09: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold09: usekernel=FALSE, laplace=0, adjust=1 
-- Fold09: usekernel=FALSE, laplace=0, adjust=1 
-+ Fold10: usekernel= TRUE, laplace=0, adjust=1 
-- Fold10: usekernel= TRUE, laplace=0, adjust=1 
-+ Fold10: usekernel=FALSE, laplace=0, adjust=1 
-- Fold10: usekernel=FALSE, laplace=0, adjust=1 
-Aggregating results
-Selecting tuning parameters
-Fitting laplace = 0, usekernel = TRUE, adjust = 1 on full training set</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>y3pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo3, <span class="at">newdata =</span> test)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">&lt;-</span> <span class="fu">table</span>(test<span class="sc">$</span>clasificacion, y3pred)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>tp <span class="ot">&lt;-</span> cm[<span class="dv">2</span>, <span class="dv">2</span>]  <span class="co"># true positives Casa este etiquetada bien cara / cara</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>tn <span class="ot">&lt;-</span> cm[<span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># true negatives Casa esta etiquetada bien barata / barata</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> cm[<span class="dv">1</span>, <span class="dv">2</span>]  <span class="co"># false positives Casa etiquetada como cara / barata</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> cm[<span class="dv">2</span>, <span class="dv">1</span>]  <span class="co"># false negatives Casa etiquetada como barata / cara</span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>recall <span class="ot">&lt;-</span> tp <span class="sc">/</span> (tp <span class="sc">+</span> fn)</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>recall</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.991453</code></pre>
-</div>
-</div>
-</section>
-<section id="overfitting-de-naive-bayes" class="level4">
-<h4 class="anchored" data-anchor-id="overfitting-de-naive-bayes">6.2.4 Overfitting de Naive Bayes</h4>
-</section>
-<section id="modelo-con-predicción-de-train" class="level4">
-<h4 class="anchored" data-anchor-id="modelo-con-predicción-de-train">Modelo con predicción de train</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>modelo<span class="ot">&lt;-</span><span class="fu">naiveBayes</span>(train<span class="sc">$</span>clasificacion<span class="sc">~</span>., <span class="at">data=</span>train)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(train, <span class="at">select =</span> <span class="sc">-</span>clasificacion)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>predBayes<span class="ot">&lt;-</span><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> test1)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>cm<span class="ot">&lt;-</span>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(predBayes,train<span class="sc">$</span>clasificacion)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>cm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Confusion Matrix and Statistics
-
-             Reference
-Prediction    Caras Economicas Intermedias
-  Caras         260          0          37
-  Economicas      2        267          88
-  Intermedias    22          7         153
-
-Overall Statistics
-                                          
-               Accuracy : 0.8134          
-                 95% CI : (0.7853, 0.8393)
-    No Information Rate : 0.3397          
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.7202          
-                                          
- Mcnemar's Test P-Value : 3.851e-16       
-
-Statistics by Class:
-
-                     Class: Caras Class: Economicas Class: Intermedias
-Sensitivity                0.9155            0.9745             0.5504
-Specificity                0.9330            0.8399             0.9480
-Pos Pred Value             0.8754            0.7479             0.8407
-Neg Pred Value             0.9555            0.9854             0.8089
-Prevalence                 0.3397            0.3278             0.3325
-Detection Rate             0.3110            0.3194             0.1830
-Detection Prevalence       0.3553            0.4270             0.2177
-Balanced Accuracy          0.9242            0.9072             0.7492</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>modelo<span class="ot">&lt;-</span><span class="fu">naiveBayes</span>(train<span class="sc">$</span>clasificacion<span class="sc">~</span>., <span class="at">data=</span>train)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>test1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(test, <span class="at">select =</span> <span class="sc">-</span>clasificacion)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>predBayes<span class="ot">&lt;-</span><span class="fu">predict</span>(modelo, <span class="at">newdata =</span> test1)</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>cm<span class="ot">&lt;-</span>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(predBayes,test<span class="sc">$</span>clasificacion)</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>cm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Confusion Matrix and Statistics
-
-             Reference
-Prediction    Caras Economicas Intermedias
-  Caras         108          0          18
-  Economicas      0        112          40
-  Intermedias    14          9          58
-
-Overall Statistics
-                                          
-               Accuracy : 0.7744          
-                 95% CI : (0.7276, 0.8166)
-    No Information Rate : 0.3398          
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.6608          
-                                          
- Mcnemar's Test P-Value : NA              
-
-Statistics by Class:
-
-                     Class: Caras Class: Economicas Class: Intermedias
-Sensitivity                0.8852            0.9256             0.5000
-Specificity                0.9241            0.8319             0.9053
-Pos Pred Value             0.8571            0.7368             0.7160
-Neg Pred Value             0.9399            0.9565             0.7914
-Prevalence                 0.3398            0.3370             0.3231
-Detection Rate             0.3008            0.3120             0.1616
-Detection Prevalence       0.3510            0.4234             0.2256
-Balanced Accuracy          0.9046            0.8788             0.7027</code></pre>
-</div>
-</div>
-<p>Al observar el accuracy de la matriz de confusión al predecir con train y al predecir con test, es posible observar que el accuracy de test es menor. Esto quiere decir que es muy posible que el modelo no esté haciendo overfitting. Sin embargo, tiene recall de 1 y 0.99 sin cross validation y con crossvalidation, por lo que es posible que si esté realizándolo, aunque también es posible obtener estos resultados por el tipo de la métrica usada.</p>
-<p>El mejor modelo entre el cross validation y el anterior es el anterior porque este tiene un recall de 1 mientras que con cross validation es de 0.99.</p>
-</section>
-</section>
-</section>
-<section id="random-forest" class="level2">
-<h2 class="anchored" data-anchor-id="random-forest">7. Random Forest</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>train1 <span class="ot">&lt;-</span> <span class="fu">subset</span>(train, <span class="at">selecWt =</span> <span class="sc">-</span>SalePrice)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>multi_variables <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"TotalBsmtSF"</span>,<span class="st">"HouseStyle"</span>,<span class="st">"BsmtQual"</span>,<span class="st">"Neighborhood"</span>, <span class="st">"clasificacion"</span>)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>train1 <span class="ot">&lt;-</span> train1[, multi_variables]</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> test[, multi_variables]</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>modeloRF <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(clasificacion<span class="sc">~</span>., train1, <span class="at">na.action =</span> na.omit)</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>y5pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modeloRF, <span class="at">newdata =</span> test)</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>y5pred <span class="ot">&lt;-</span> <span class="fu">factor</span>(y5pred)</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="at">reference =</span> test<span class="sc">$</span>clasificacion, <span class="at">data =</span> y5pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Confusion Matrix and Statistics
-
-             Reference
-Prediction    Caras Economicas Intermedias
-  Caras         107          0          11
-  Economicas      0         92          17
-  Intermedias    15         22          87
-
-Overall Statistics
-                                          
-               Accuracy : 0.8148          
-                 95% CI : (0.7702, 0.8541)
-    No Information Rate : 0.3476          
-    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-                                          
-                  Kappa : 0.7222          
-                                          
- Mcnemar's Test P-Value : NA              
-
-Statistics by Class:
-
-                     Class: Caras Class: Economicas Class: Intermedias
-Sensitivity                0.8770            0.8070             0.7565
-Specificity                0.9520            0.9283             0.8432
-Pos Pred Value             0.9068            0.8440             0.7016
-Neg Pred Value             0.9356            0.9091             0.8767
-Prevalence                 0.3476            0.3248             0.3276
-Detection Rate             0.3048            0.2621             0.2479
-Detection Prevalence       0.3362            0.3105             0.3533
-Balanced Accuracy          0.9145            0.8676             0.7999</code></pre>
-</div>
-</div>
-<section id="métrica-de-desempeño-del-random-forest" class="level3">
-<h3 class="anchored" data-anchor-id="métrica-de-desempeño-del-random-forest">7.1 Métrica de desempeño del random forest</h3>
-<p>Se decidió usar recall, porque se consideró que era más costoso identificar una casa cara como barata por sus implicaciones.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>cm3 <span class="ot">&lt;-</span> <span class="fu">table</span>(test<span class="sc">$</span>clasificacion, y5pred)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>tp <span class="ot">&lt;-</span> cm3[<span class="dv">2</span>, <span class="dv">2</span>]  <span class="co"># true positives Casa este etiquetada bien cara / cara</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>tn <span class="ot">&lt;-</span> cm3[<span class="dv">1</span>, <span class="dv">1</span>]  <span class="co"># true negatives Casa esta etiquetada bien barata / barata</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>fp <span class="ot">&lt;-</span> cm3[<span class="dv">1</span>, <span class="dv">2</span>]  <span class="co"># false positives Casa etiquetada como cara / barata</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> cm3[<span class="dv">2</span>, <span class="dv">1</span>]  <span class="co"># false negatives Casa etiquetada como barata / cara</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>recall3 <span class="ot">&lt;-</span> tp <span class="sc">/</span> (tp <span class="sc">+</span> fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>El recall del random forest inicial es 1. Esto nos indica que el modelo es un buen identificador casos positivos, pero aun puede que no sea muy bueno para identificar falsos positivos. Esto puede causar que casas que son baratas sean clasificadas como caras y no se lleguen a vender. Pero también indica que es poco probable que clasifiquen casas caras como baratas, evitando desinformación.</p>
-</section>
-<section id="matriz-de-confusión-del-random-forest" class="level3">
-<h3 class="anchored" data-anchor-id="matriz-de-confusión-del-random-forest">7.2 Matriz de confusión del random forest</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>confusion_matrix <span class="ot">&lt;-</span> <span class="fu">confusionMatrix</span>(<span class="at">reference =</span> test<span class="sc">$</span>clasificacion, <span class="at">data =</span> y5pred)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>confusion_matrix<span class="sc">$</span>table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>             Reference
-Prediction    Caras Economicas Intermedias
-  Caras         107          0          11
-  Economicas      0         92          17
-  Intermedias    15         22          87</code></pre>
-</div>
-</div>
-<p>El recall del árbol de decisión es de 0.9896907, el del random forest es de 1 y el de naive bayes es de también es 1. Por otra parte, el accuracy de random forest es de 0.81, el del árbol de decisión es 0.77 y el de naive bayes es de 0.77. Entonces, para clasficiación de positivos es posible ver que naive bayes y random forest son los mejores modelos. Por otra parte, para clasificación en general es mejor random forest.</p>
 </section>
 </section>
 

@@ -7,6 +7,7 @@ title: "MD_HDT6"
 set.seed(123)
 datos <- read.csv("train.csv")
 ```
+
 ```{r echo=F, include=F, load_libraries}
 library(dplyr)
 library(hopkins)
@@ -32,6 +33,8 @@ library(rpart.plot)
 library(naivebayes)
 library(randomForest)
 library(dummy)
+library(profvis)
+library(mlr)
 ```
 
 ## 1. Dvisión de variables numéricas y obtención de data de prueba y entrenamiento
@@ -53,257 +56,212 @@ numericas_norm <- mutate_if(numericas, is.numeric, scale)
 datos <- data.frame(numericas_norm, datos[, -match(numeric_variables, names(datos))])
 ```
 
+### 1.2 Analisis de NA's
 
-
-### 1.2 Data de entrenamiento y de prueba
 ```{r}
-porcentaje <- 0.7
-set.seed(123)
-corte <- sample(nrow(datos), nrow(datos) * porcentaje)
-train <- datos[corte, ]
-test <- datos[-corte, ]
+faltantes_por_col <- colSums(is.na(datos))
+faltantes_por_col
 ```
 
-### 1.3 Creación de árbol de clasificación de la nueva varibale
+Se puede observar que PoolQC tiene demasiados datos faltantes, al igual que Fence, Alley, MiscFeature y FireplaceQu. Por lo tanto estas columnas no se usaran.
+
+```{r}
+datos <- select(datos, -Id, -PoolQC, -Fence, -Alley, -MiscFeature, -FireplaceQu) 
+datos <- na.omit(datos)
+```
+
+### 1.2 Eliminación de variables no significativas
+
+```{r}
+datos <- select(datos, -GarageYrBlt, -SaleType, -SaleCondition, -MoSold, -YrSold, -YearBuilt, -Condition2, -MSSubClass, MSZoning, -LotShape)
+```
+
+Se observaron diferentes variables que no aportaban al modelo, por lo tanto se decidió eliminarlas.
+
+### 1.3 Creación de clasificación de la variable de precios
 
 ```{r}
 p33 <- quantile(datos$SalePrice, 0.33)
 p66 <- quantile(datos$SalePrice, 0.66)
 datosT <- datos
+
 datosT <- datosT %>%
     mutate(clasificacion = ifelse(datosT$SalePrice < p33, "Economicas",
         ifelse(datosT$SalePrice < p66, "Intermedias",
             "Caras"
         )
     ))
-datosT$clasificacion <- factor(datosT$clasificacion)
+datosT$clasificacion <- as.factor(datosT$clasificacion)
 ```
 
-### Creación de variables dicotómicas
+### 1.4 Creación de variables dicotómicas
 
 ```{r}
-datosT$clasificacion
-precio <- dummy(datosT$clasificacion)
-precio
+library(fastDummies)
+datos_con_dummy <- dummy_cols(datosT, select_columns = c("clasificacion"))
+datos_con_dummy <- select(datos_con_dummy, -clasificacion, -clasificacion_Economicas, -clasificacion_Intermedias) 
+datos_con_dummy$clasificacion_Caras <- datos_con_dummy$clasificacion_Caras
+datos_con_dummy<-datos_con_dummy %>% mutate_at(c("clasificacion_Caras"),as.factor)
 ```
 
-
-
-
-## 5. Árbol de clasificación
-
-
+### 1.5. Modelo con todas las variables
 
 ```{r}
 porcentaje <- 0.7
 set.seed(123)
-corte <- sample(nrow(datosT), nrow(datosT) * porcentaje)
-train <- datosT[corte, ]
-test <- datosT[-corte, ]
-```
 
-```{r}
-train <- subset(train, select = -SalePrice)
-multi_variables <- c("OverallQual", "MasVnrArea", "BsmtFinSF1", "GrLivArea", "Fireplaces", "WoodDeckSF", "OpenPorchSF", "TotalBsmtSF","HouseStyle","BsmtQual","Neighborhood", "clasificacion", "MiscFeature")
-train <- train[, multi_variables]
-new_decision_tree <- rpart(formula = clasificacion ~ ., data = train, method = "class")
-rpart.plot(new_decision_tree, box.palette = "green")
-y2pred <- predict(new_decision_tree, newdata = test)
-y2pred<-apply(y2pred, 1, function(x) colnames(y2pred)[which.max(x)])
-y2pred <- factor(y2pred)
-```
+numeric_variables2 <- c("LotFrontage", "LotArea", "OverallQual", "OverallCond", "MasVnrArea", "BsmtFinSF1", "BsmtFinSF2", "BsmtUnfSF", "TotalBsmtSF", "X1stFlrSF", "X2ndFlrSF", "LowQualFinSF", "GrLivArea", "BsmtFullBath", "BsmtHalfBath", "FullBath", "HalfBath", "BedroomAbvGr", "KitchenAbvGr", "TotRmsAbvGrd", "Fireplaces", "GarageCars", "GarageArea", "WoodDeckSF", "OpenPorchSF", "EnclosedPorch", "X3SsnPorch", "ScreenPorch", "PoolArea", "MiscVal", "clasificacion_Caras")
+datos_num <- select(datos_con_dummy, -SalePrice)
+datos_num <- select(datos_con_dummy, -Utilities)
+# datos_num <- datos_con_dummy[, numeric_variables2]
 
-### 5.3 Métrica de desempeño del árbol
-
-Se decidió usar recall, porque se consideró que era más costoso identificar una casa cara como barata por sus implicaciones.
-```{r}
-cm <- table(test$clasificacion, y2pred)
-tp <- cm[2, 2]  # true positives Casa este etiquetada bien cara / cara
-tn <- cm[1, 1]  # true negatives Casa esta etiquetada bien barata / barata
-fp <- cm[1, 2]  # false positives Casa etiquetada como cara / barata
-fn <- cm[2, 1]  # false negatives Casa etiquetada como barata / cara
-recall <- tp / (tp + fn)
-```
-
-
-El recall del árbol de clasificación inicial es `r recall`. Esto nos indica que el modelo es un buen identificador casos positivos, pero aun puede que no sea muy bueno para identificar falsos positivos. Esto puede causar que casas que son baratas sean clasificadas como caras y no se lleguen a vender. Pero también indica que es poco probable que clasifiquen casas caras como baratas, evitando desinformación.
-
-### 5.3 Matriz de confusión
-
-```{r}
-confusion_matrix <- confusionMatrix(reference = test$clasificacion, data = y2pred)
-confusion_matrix$table
-
-cm<-caret::confusionMatrix(y2pred,test$clasificacion)
-cm
-```
-
-
-## 6. Naive Bayes 
-
-### 6.1 Regresión
-
-#### 6.1.1 Creación del modelo
-
-```{r}
-porcentaje <- 0.7
-set.seed(123)
-corte <- sample(nrow(datos), nrow(datos) * porcentaje)
-train <- datos[corte, ]
-test <- datos[-corte, ]
+corte <- sample(nrow(datos_num), nrow(datos_num) * porcentaje)
+train <- datos_num[corte, ]
+test <- datos_num[-corte, ]
 ```
 
 ```{r}
 
-test1 <- subset(test, select = -SalePrice)
-head(train)
-modeloNB<-naiveBayes(SalePrice~.,data=train)
-predNB<- predict(modeloNB,newdata = test1)
-predNB<- as.numeric(as.character(predNB))
-plot(test$SalePrice, col="red")
-points(predNB, col="blue")
-
-
-EMA <- mean(test$SalePrice-predNB, na.rm = T)
-
-EMA
-
-mse <- mean((predNB - test$SalePrice)^2)
-# Calculate SSE
-SSE <- sum((predNB - test$SalePrice)^2)
-# Calculate TSS
-TSS <- sum((test$SalePrice - mean(test$SalePrice))^2)
-# Calculate R-squared value
-r2 <- 1 - SSE / TSS
-rmse <- sqrt(mse)
-# Print the results
-cat("R-squared:", r2, "\n")
-cat("RMSE:", rmse, "\n")
+cv <- trainControl(method="cv", number=10)
+modelo_todas_cv <- caret::train(clasificacion_Caras~., data=train,method="glm", family = binomial, trControl = cv)
 
 ```
 
-En comparación del modelo de regresion lineal multiple con el de Naive Bayes obtuvimos que el mejor modelo es el de Naive Bayes ya que el ***RMSE*** que se obtiene con este modelo es menor siendo este un 0.59 sobre un 0.66 que se obtuvo con el modelo de regresion multiple. Indicando asi que el modelo de naive bayes tiene menor cantidad de errores para realizar predicciones sobre el precio de las viviendas.
-
-Por otro lado en comparacion con el arbol de regresion se obtuvieron ***R^2*** bastante similares con siendo estos 0.64 para el arbol y un 0.65 para el naive bayes. Esto indica que ambos modelos son bastante similares para realizar predicciones sobre el precio de las viviendas, pero el modelo de Naive Bayes es mejor.
-
-### 6.2 Clasificación
-
-#### 6.2.1 División de datos en categorías
 ```{r}
-summary(datos$SalePrice)
-p33 <- quantile(datos$SalePrice, 0.33)
-p66 <- quantile(datos$SalePrice, 0.66)
-datos <- datos %>%
-    mutate(clasificacion = ifelse(datos$SalePrice < p33, "Economicas",
-        ifelse(datos$SalePrice < p66, "Intermedias",
-            "Caras"
-        )
-    ))
-datos$clasificacion <- factor(datos$clasificacion)
+model_summary <- summary(modelo_todas_cv)
+print(model_summary, signif.stars = TRUE, digits = 3)
 ```
+
+El modelo indica la significancia de las variable con un *
+
+```{r}
+
+variables_significativas <- model_summary$coefficients[model_summary$coefficients[, 4] < 0.01, , drop = FALSE]
+columnas_significativas <- rownames(variables_significativas[order(abs(variables_significativas[, 1]), decreasing = TRUE), ])
+columnas_significativas
+
+```
+
+Como se puede observar al tener el modelo con todas las variables se obteiene que ninguna variable es significativa, por lo tanto se procede a realizar el modelo con las variables numericas y variables que se consideran significativas.
+
+### 1.5.1 Análisis de correlación y ajuste de modelo
+
+```{r}
+datos_cor <- datos_con_dummy[, numeric_variables]
+datos_cor <- select(datos_cor, -SalePrice)
+correlacion <- cor(datos_cor)
+corrplot(correlacion)
+```
+
+Existe correlación entre las siguientes variables:
+
+- LotFrontage: LotArea, TotalBsmtSF, X1stFlrSF
+- LotArea: LotFrontage, TotalBsmtSF, GrLivArea
+- OverallQual: TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, GarageCars, GarageArea
+- BsmtFinSF1: BsmtUnfSF, BsmtFullBath
+- BsmtUnfSF: BsmtFinSF1
+- TotalsmtSF: X1stFlrSF
+- X1stFlrSF: TotalBsmtSF
+- X2ndFlrSF: GrLivArea
+- GrLivArea: X2ndFlrSF, TotRmsAbvGrd
+- BsmtFullBath: BsmtFinSF1
+- BedRoomAvGr: TotRmsAbvGr
+- TotRmsAbvGrd: OverallQual, X2ndFlrSF, FullBath, BedroomAbvGr
+- FirePlaces: OverallQual, X1stFlrSF, GrLivArea
+- GarageCars: OverallQual, TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, TotRmsAbvGrd, GarageArea 
+- GarageArea: OverallQual, TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, TotRmsAbvGrd, GarageCars
+
+
+```{r prediccion_modelo_numericas}
+test_1 = select(test, -clasificacion_Caras)
+pred <- predict(modelo_todas_cv,newdata = test_1)
+```
+
+```{r}
+caret::confusionMatrix(as.factor(pred),as.factor(test$clasificacion_Caras))
+```
+
+Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.87. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.
+
+
+```{r curva_de_aprendizaje}
+# train <- train[, numeric_variables2]
+datos.task = makeClassifTask(data = train, target = "clasificacion_Caras")
+rin2 = makeResampleDesc(method = "CV", iters = 10, predict = "both")
+lrn = makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
+lc2 = generateLearningCurveData(learners = lrn, task = datos.task,
+                                percs = seq(0.1, 1, by = 0.1),
+                                measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
+                                show.info = FALSE)
+plotLearningCurve(lc2, facet = "learner")
+```
+
+Al tener el accuracy con un 86% y al observar las curvas de aprendizaje se puede concluir que el modelo tiene overfitting. La curva de balance de error en training siempre está en 0 y nunca converge con la curva de test. Con un accuracy tan alto y pocas variables significativas, se concluye lo mencionado.
+
+
+### 1.6 Modelo con variables numéricas
 
 ```{r}
 porcentaje <- 0.7
 set.seed(123)
-corte <- sample(nrow(datos), nrow(datos) * porcentaje)
-train <- datos[corte, ]
-test <- datos[-corte, ]
-```
 
+numeric_variables2 <- c("LotFrontage", "LotArea", "OverallQual", "OverallCond", "MasVnrArea", "BsmtFinSF1", "BsmtFinSF2", "BsmtUnfSF", "TotalBsmtSF", "X1stFlrSF", "X2ndFlrSF", "LowQualFinSF", "GrLivArea", "BsmtFullBath", "BsmtHalfBath", "FullBath", "HalfBath", "BedroomAbvGr", "KitchenAbvGr", "TotRmsAbvGrd", "Fireplaces", "GarageCars", "GarageArea", "WoodDeckSF", "OpenPorchSF", "EnclosedPorch", "X3SsnPorch", "ScreenPorch", "PoolArea", "MiscVal", "clasificacion_Caras")
+# datos_num <- select(datos_con_dummy, -SalePrice)
+# datos_num <- select(datos_con_dummy, -Utilities)
+datos_num <- datos_con_dummy[, numeric_variables2]
 
-
-#### 6.2.2 Predicción y evaluación de modelo
-
-```{r}
-modelo<-naiveBayes(train$clasificacion~., data=train)
-test1 <- subset(test, select = -clasificacion)
-predBayes<-predict(modelo, newdata = test1)
-cm<-caret::confusionMatrix(predBayes,test$clasificacion)
-cm
-
-tp <- cm$table[2, 2]  # true positives Casa este etiquetada bien cara / cara
-tn <- cm$table[1, 1]  # true negatives Casa esta etiquetada bien barata / barata
-fp <- cm$table[1, 2]  # false positives Casa etiquetada como cara / barata
-fn <- cm$table[2, 1]  # false negatives Casa etiquetada como barata / cara
-
-recall <- tp / (tp + fn)
-
-recall
-```
-
-#### 6.2.3 Cross validation
-
-```{r}
-train_without_pred_variable <- subset(train, select = -clasificacion)
-train_without_pred_variable = train_without_pred_variable[, numeric_variables]
-ct <- trainControl(method = "cv",number=10, verboseIter=T)
-modelo3 <- caret::train(train_without_pred_variable, train$clasificacion, trControl = ct, method="naive_bayes")
-y3pred <- predict(modelo3, newdata = test)
-cm <- table(test$clasificacion, y3pred)
-tp <- cm[2, 2]  # true positives Casa este etiquetada bien cara / cara
-tn <- cm[1, 1]  # true negatives Casa esta etiquetada bien barata / barata
-fp <- cm[1, 2]  # false positives Casa etiquetada como cara / barata
-fn <- cm[2, 1]  # false negatives Casa etiquetada como barata / cara
-recall <- tp / (tp + fn)
-recall
-```
-
-#### 6.2.4 Overfitting de Naive Bayes
-
-#### Modelo con predicción de train
-```{r}
-modelo<-naiveBayes(train$clasificacion~., data=train)
-test1 <- subset(train, select = -clasificacion)
-predBayes<-predict(modelo, newdata = test1)
-cm<-caret::confusionMatrix(predBayes,train$clasificacion)
-cm
+corte <- sample(nrow(datos_num), nrow(datos_num) * porcentaje)
+train <- datos_num[corte, ]
+test <- datos_num[-corte, ]
 ```
 
 ```{r}
-modelo<-naiveBayes(train$clasificacion~., data=train)
-test1 <- subset(test, select = -clasificacion)
-predBayes<-predict(modelo, newdata = test1)
-cm<-caret::confusionMatrix(predBayes,test$clasificacion)
-cm
+
+cv <- trainControl(method="cv", number=10)
+modelo_todas_cv <- caret::train(clasificacion_Caras~., data=train,method="glm", family = binomial, trControl = cv)
+
 ```
-
-Al observar el accuracy de la matriz de confusión al predecir con train y al predecir con test, es posible observar que el accuracy de test es menor. Esto quiere decir que es muy posible que el modelo no esté haciendo overfitting. Sin embargo, tiene recall de 1 y 0.99 sin cross validation y con crossvalidation, por lo que es posible que si esté realizándolo, aunque también es posible obtener estos resultados por el tipo de la métrica usada.
-
-El mejor modelo entre el cross validation y el anterior es el anterior porque este tiene un recall de 1 mientras que con cross validation es de 0.99. 
-
-
-## 7. Random Forest
-```{r}
-train1 <- subset(train, selecWt = -SalePrice)
-multi_variables <- c("OverallQual", "MasVnrArea", "BsmtFinSF1", "GrLivArea", "Fireplaces", "WoodDeckSF", "OpenPorchSF", "TotalBsmtSF","HouseStyle","BsmtQual","Neighborhood", "clasificacion")
-train1 <- train1[, multi_variables]
-test <- test[, multi_variables]
-modeloRF <- randomForest(clasificacion~., train1, na.action = na.omit)
-y5pred <- predict(modeloRF, newdata = test)
-y5pred <- factor(y5pred)
-confusionMatrix(reference = test$clasificacion, data = y5pred)
-```
-
-### 7.1 Métrica de desempeño del random forest
-
-Se decidió usar recall, porque se consideró que era más costoso identificar una casa cara como barata por sus implicaciones.
-```{r}
-cm3 <- table(test$clasificacion, y5pred)
-tp <- cm3[2, 2]  # true positives Casa este etiquetada bien cara / cara
-tn <- cm3[1, 1]  # true negatives Casa esta etiquetada bien barata / barata
-fp <- cm3[1, 2]  # false positives Casa etiquetada como cara / barata
-fn <- cm3[2, 1]  # false negatives Casa etiquetada como barata / cara
-recall3 <- tp / (tp + fn)
-```
-
-
-El recall del random forest inicial es `r recall3`. Esto nos indica que el modelo es un buen identificador casos positivos, pero aun puede que no sea muy bueno para identificar falsos positivos. Esto puede causar que casas que son baratas sean clasificadas como caras y no se lleguen a vender. Pero también indica que es poco probable que clasifiquen casas caras como baratas, evitando desinformación.
-
-### 7.2 Matriz de confusión del random forest
 
 ```{r}
-confusion_matrix <- confusionMatrix(reference = test$clasificacion, data = y5pred)
-confusion_matrix$table
+model_summary <- summary(modelo_todas_cv)
+print(model_summary, signif.stars = TRUE, digits = 3)
 ```
 
-El recall del árbol de decisión es de 0.9896907, el del random forest es de 1 y el de naive bayes es de también es 1. Por otra parte, el accuracy de random forest es de 0.81, el del árbol de decisión es 0.77 y el de naive bayes es de 0.77. Entonces, para clasficiación de positivos es posible ver que naive bayes y random forest son los mejores modelos. Por otra parte, para clasificación en general es mejor random forest.
+Como se puede observar el modelo indica la significancia de las variable con un *, pero nosotros designamos las varibales que tienen un valor de significaia menor a 0.01, las cuales son:
+
+```{r}
+
+variables_significativas <- model_summary$coefficients[model_summary$coefficients[, 4] < 0.01, , drop = FALSE]
+columnas_significativas <- rownames(variables_significativas[order(abs(variables_significativas[, 1]), decreasing = TRUE), ])
+columnas_significativas
+
+```
+
+Como se puede hay varias variables que son significativas para el modelo, con lo que teniendo eliminadas las columnas que no aportan al modelo. Hay otras variables como TotalBsmtSF y GrLivArea que no aportan nada al modelo.
+
+####  1.6.1 Análisis de ajuste de modelo
+
+```{r}
+test_1 = select(test, -clasificacion_Caras)
+pred <- predict(modelo_todas_cv,newdata = test_1)
+```
+
+```{r}
+caret::confusionMatrix(as.factor(pred),as.factor(test$clasificacion_Caras))
+```
+
+Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.89. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.
+
+
+```{r}
+datos.task = makeClassifTask(data = train, target = "clasificacion_Caras")
+rin2 = makeResampleDesc(method = "CV", iters = 10, predict = "both")
+lrn = makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
+lc2 = generateLearningCurveData(learners = lrn, task = datos.task,
+                                percs = seq(0.1, 1, by = 0.1),
+                                measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
+                                show.info = FALSE)
+plotLearningCurve(lc2, facet = "learner")
+```
+
+Al tener el accuracy con un 89% y al observar las curvas de aprendizaje se puede concluir que el modelo tiene NO tiene overfitting. La curva de balance de error en training y de test convergen en cierto punto y se quedan relativamente constantes. Esto es lo que indica que tanto test como train son similares, por lo que es probable que NO haya overfitting con las variables numéricas únicamente.
