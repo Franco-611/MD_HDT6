@@ -186,7 +186,7 @@ SaleCondition
 <section id="eliminación-de-variables-no-significativas" class="level3">
 <h3 class="anchored" data-anchor-id="eliminación-de-variables-no-significativas">1.2 Eliminación de variables no significativas</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">select</span>(datos, <span class="sc">-</span>GarageYrBlt, <span class="sc">-</span>SaleType, <span class="sc">-</span>SaleCondition, <span class="sc">-</span>MoSold, <span class="sc">-</span>YrSold, <span class="sc">-</span>YearBuilt, <span class="sc">-</span>Condition2, <span class="sc">-</span>MSSubClass, MSZoning, <span class="sc">-</span>LotShape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">select</span>(datos, <span class="sc">-</span>GarageYrBlt, <span class="sc">-</span>SaleType, <span class="sc">-</span>SaleCondition, <span class="sc">-</span>MoSold, <span class="sc">-</span>YrSold, <span class="sc">-</span>YearBuilt, <span class="sc">-</span>Condition2, <span class="sc">-</span>MSSubClass, MSZoning, <span class="sc">-</span>LotShape, <span class="sc">-</span>YearRemodAdd, <span class="sc">-</span>Exterior1st, <span class="sc">-</span>BsmtFinType1, <span class="sc">-</span>BsmtFinType2, <span class="sc">-</span>GarageQual, <span class="sc">-</span>GarageCond, <span class="sc">-</span>RoofMatl, <span class="sc">-</span>Condition1, <span class="sc">-</span>BsmtQual, <span class="sc">-</span> Exterior2nd, <span class="sc">-</span>RoofStyle, <span class="sc">-</span>GarageType)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Se observaron diferentes variables que no aportaban al modelo, por lo tanto se decidió eliminarlas.</p>
 </section>
@@ -216,134 +216,36 @@ SaleCondition
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>datos_con_dummy<span class="ot">&lt;-</span>datos_con_dummy <span class="sc">%&gt;%</span> <span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">"clasificacion_Caras"</span>),as.factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="modelo-con-todas-las-variables" class="level3">
-<h3 class="anchored" data-anchor-id="modelo-con-todas-las-variables">1.5. Modelo con todas las variables</h3>
+<section id="datos-de-entrenamiento-y-prueba" class="level3">
+<h3 class="anchored" data-anchor-id="datos-de-entrenamiento-y-prueba">2. Datos de entrenamiento y prueba</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>numeric_variables2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"LotFrontage"</span>, <span class="st">"LotArea"</span>, <span class="st">"OverallQual"</span>, <span class="st">"OverallCond"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtFinSF2"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"TotalBsmtSF"</span>, <span class="st">"X1stFlrSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"LowQualFinSF"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"BsmtHalfBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"HalfBath"</span>, <span class="st">"BedroomAbvGr"</span>, <span class="st">"KitchenAbvGr"</span>, <span class="st">"TotRmsAbvGrd"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"GarageCars"</span>, <span class="st">"GarageArea"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"EnclosedPorch"</span>, <span class="st">"X3SsnPorch"</span>, <span class="st">"ScreenPorch"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>SalePrice)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>Utilities)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- datos_con_dummy[, numeric_variables2]</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_num), <span class="fu">nrow</span>(datos_num) <span class="sc">*</span> porcentaje)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos_num[corte, ]</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_num[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>SalePrice)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>Utilities)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_num), <span class="fu">nrow</span>(datos_num) <span class="sc">*</span> porcentaje)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos_num[corte, ]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_num[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="modelo-de-regresión-logística-para-saber-si-vivienda-es-cara-o-no." class="level2">
+<h2 class="anchored" data-anchor-id="modelo-de-regresión-logística-para-saber-si-vivienda-es-cara-o-no.">3. Modelo de regresión logística para saber si vivienda es cara o no.</h2>
+<section id="modelo-con-todas-las-variables." class="level3">
+<h3 class="anchored" data-anchor-id="modelo-con-todas-las-variables.">3.1 Modelo con todas las variables.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>pm1 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>AIC1 <span class="ot">&lt;-</span> <span class="fu">AIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>BIC1 <span class="ot">&lt;-</span> <span class="fu">BIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary, <span class="at">signif.stars =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary, <span class="at">signif.stars =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -351,302 +253,166 @@ NULL
 
 Deviance Residuals: 
       Min         1Q     Median         3Q        Max  
--5.96e-05  -2.00e-08  -2.00e-08   2.00e-08   5.70e-05  
+-1.06e-04  -2.00e-08  -2.00e-08   2.00e-08   9.33e-05  
 
-Coefficients: (18 not defined because of singularities)
-                      Estimate Std. Error z value Pr(&gt;|z|)
-(Intercept)           3.39e+02   4.76e+07       0        1
-SalePrice             1.29e+02   1.41e+05       0        1
-LotFrontage           9.04e+00   6.55e+04       0        1
-LotArea               6.11e-01   1.50e+05       0        1
-OverallQual          -1.55e-01   8.20e+04       0        1
-OverallCond          -5.26e+00   8.28e+04       0        1
-MasVnrArea            2.45e-01   7.84e+04       0        1
-BsmtFinSF1           -6.99e+00   2.25e+05       0        1
-BsmtFinSF2           -3.48e+00   1.31e+05       0        1
-BsmtUnfSF             1.33e+00   2.53e+05       0        1
-TotalBsmtSF                 NA         NA      NA       NA
-X1stFlrSF            -1.35e+01   1.81e+05       0        1
-X2ndFlrSF            -6.66e+00   1.67e+05       0        1
-LowQualFinSF          8.37e+00   6.08e+04       0        1
-GrLivArea                   NA         NA      NA       NA
-BsmtFullBath         -2.31e+00   4.43e+04       0        1
-BsmtHalfBath          4.02e+00   3.05e+04       0        1
-FullBath             -5.59e+00   8.85e+04       0        1
-HalfBath              8.44e+00   1.01e+05       0        1
-BedroomAbvGr         -6.17e+00   6.07e+04       0        1
-KitchenAbvGr          4.76e+00   4.56e+05       0        1
-TotRmsAbvGrd          2.05e+00   1.20e+05       0        1
-Fireplaces           -4.57e+00   6.35e+04       0        1
-GarageCars           -5.53e+00   1.30e+05       0        1
-GarageArea            6.97e+00   1.13e+05       0        1
-WoodDeckSF           -3.62e+00   3.29e+04       0        1
-OpenPorchSF           2.96e+00   4.62e+04       0        1
-EnclosedPorch        -2.31e+00   4.31e+04       0        1
-X3SsnPorch           -2.53e+00   7.23e+04       0        1
-ScreenPorch          -6.27e+00   6.99e+04       0        1
-PoolArea             -1.14e-01   1.02e+05       0        1
-MiscVal               4.81e+00   7.75e+04       0        1
-MSZoningFV           -5.53e+01   8.69e+05       0        1
-MSZoningRH           -3.85e+01   9.93e+05       0        1
-MSZoningRL           -6.16e+01   9.38e+05       0        1
-MSZoningRM           -4.35e+01   1.02e+06       0        1
-StreetPave           -1.31e+00   1.29e+06       0        1
-LandContourHLS       -1.50e+01   3.16e+05       0        1
-LandContourLow       -3.93e+01   7.33e+05       0        1
-LandContourLvl       -2.53e+01   3.17e+05       0        1
-LotConfigCulDSac     -1.24e+01   3.38e+05       0        1
-LotConfigFR2         -2.35e+01   1.57e+05       0        1
-LotConfigFR3         -8.70e-01   4.07e+05       0        1
-LotConfigInside      -1.50e+01   9.42e+04       0        1
-LandSlopeMod          7.59e+00   5.94e+05       0        1
-LandSlopeSev          9.60e+01   1.06e+06       0        1
-NeighborhoodBlueste   6.75e+01   8.65e+05       0        1
-NeighborhoodBrDale    8.32e+01   1.05e+06       0        1
-NeighborhoodBrkSide   4.71e+01   5.35e+05       0        1
-NeighborhoodClearCr   5.69e+01   7.96e+05       0        1
-NeighborhoodCollgCr   5.77e+01   2.14e+05       0        1
-NeighborhoodCrawfor   4.46e+01   7.45e+05       0        1
-NeighborhoodEdwards   2.80e+01   2.49e+05       0        1
-NeighborhoodGilbert   1.72e+01   2.96e+05       0        1
-NeighborhoodIDOTRR    5.21e+01   6.38e+05       0        1
-NeighborhoodMeadowV   1.44e+02   9.08e+05       0        1
-NeighborhoodMitchel   7.11e+01   4.50e+05       0        1
-NeighborhoodNAmes     3.25e+01   3.26e+05       0        1
-NeighborhoodNoRidge   2.53e+01   2.80e+05       0        1
-NeighborhoodNPkVill   1.51e+02   9.19e+05       0        1
-NeighborhoodNridgHt   4.72e+01   2.33e+05       0        1
-NeighborhoodNWAmes    4.96e+01   4.39e+05       0        1
-NeighborhoodOldTown   3.07e+01   5.46e+05       0        1
-NeighborhoodSawyer    6.20e+01   5.42e+05       0        1
-NeighborhoodSawyerW   4.33e+01   3.37e+05       0        1
-NeighborhoodSomerst   2.72e+01   4.64e+05       0        1
-NeighborhoodStoneBr   9.90e+01   3.72e+05       0        1
-NeighborhoodSWISU     4.58e+01   7.82e+05       0        1
-NeighborhoodTimber    4.64e+01   3.63e+05       0        1
-NeighborhoodVeenker   6.16e+01   7.03e+05       0        1
-Condition1Feedr      -2.77e+01   5.88e+05       0        1
-Condition1Norm       -1.67e+01   4.51e+05       0        1
-Condition1PosA       -9.44e+01   1.34e+06       0        1
-Condition1PosN        4.66e+01   6.76e+05       0        1
-Condition1RRAe        1.93e+01   6.26e+05       0        1
-Condition1RRAn       -6.10e+01   5.93e+05       0        1
-Condition1RRNe              NA         NA      NA       NA
-Condition1RRNn       -4.72e+01   4.75e+07       0        1
-BldgType2fmCon       -3.74e+01   9.88e+05       0        1
-BldgTypeDuplex       -1.71e+01   2.14e+06       0        1
-BldgTypeTwnhs         1.28e+01   1.93e+05       0        1
-BldgTypeTwnhsE        4.98e+00   1.28e+05       0        1
-HouseStyle1.5Unf     -3.38e+01   8.04e+05       0        1
-HouseStyle1Story     -7.61e+00   3.46e+05       0        1
-HouseStyle2.5Fin     -8.82e+01   1.14e+06       0        1
-HouseStyle2.5Unf     -7.62e+01   2.27e+06       0        1
-HouseStyle2Story     -2.91e+01   3.28e+05       0        1
-HouseStyleSFoyer      2.83e+01   6.96e+05       0        1
-HouseStyleSLvl       -3.27e+01   6.68e+05       0        1
-YearRemodAdd1951      4.06e+01   5.31e+05       0        1
-YearRemodAdd1952      7.88e+01   1.37e+06       0        1
-YearRemodAdd1953     -1.11e+01   1.32e+06       0        1
-YearRemodAdd1954     -5.34e+01   1.39e+06       0        1
-YearRemodAdd1955      2.11e+01   1.62e+06       0        1
-YearRemodAdd1956      3.22e+01   3.97e+05       0        1
-YearRemodAdd1957      5.32e+01   6.39e+05       0        1
-YearRemodAdd1958     -5.02e+00   5.07e+05       0        1
-YearRemodAdd1959     -2.56e+01   7.70e+05       0        1
-YearRemodAdd1960      5.45e+01   1.14e+06       0        1
-YearRemodAdd1961      2.91e+01   1.53e+06       0        1
-YearRemodAdd1962     -5.53e+01   9.72e+05       0        1
-YearRemodAdd1963     -5.17e+01   8.54e+05       0        1
-YearRemodAdd1964     -1.64e+01   5.85e+05       0        1
-YearRemodAdd1965      2.13e+01   4.96e+05       0        1
-YearRemodAdd1966     -4.53e+01   5.02e+05       0        1
-YearRemodAdd1967      3.85e+01   6.60e+05       0        1
-YearRemodAdd1968      2.87e+01   6.97e+05       0        1
-YearRemodAdd1969     -1.24e+01   4.13e+05       0        1
-YearRemodAdd1970      1.36e+01   7.11e+05       0        1
-YearRemodAdd1971      2.42e+01   7.73e+05       0        1
-YearRemodAdd1972     -5.39e+00   4.85e+05       0        1
-YearRemodAdd1973     -1.55e+01   4.65e+05       0        1
-YearRemodAdd1974     -5.62e+01   7.72e+05       0        1
-YearRemodAdd1975     -6.34e+00   3.93e+05       0        1
-YearRemodAdd1976     -3.16e+01   4.94e+05       0        1
-YearRemodAdd1977     -4.24e+01   7.48e+05       0        1
-YearRemodAdd1978      9.80e+00   7.45e+05       0        1
-YearRemodAdd1979      2.31e+01   6.75e+05       0        1
-YearRemodAdd1980      1.84e+01   6.36e+05       0        1
-YearRemodAdd1981      1.05e+01   7.12e+05       0        1
-YearRemodAdd1982     -1.69e+01   8.01e+05       0        1
-YearRemodAdd1983     -3.82e+01   6.80e+05       0        1
-YearRemodAdd1984      4.50e+01   9.58e+05       0        1
-YearRemodAdd1985      3.33e+00   5.32e+05       0        1
-YearRemodAdd1986     -3.16e+01   4.75e+07       0        1
-YearRemodAdd1987     -3.27e+01   6.72e+05       0        1
-YearRemodAdd1988      2.24e+01   4.21e+05       0        1
-YearRemodAdd1989      8.87e+00   6.66e+05       0        1
-YearRemodAdd1990      2.94e+01   4.05e+05       0        1
-YearRemodAdd1991      8.42e+00   6.68e+05       0        1
-YearRemodAdd1992      1.53e+01   5.41e+05       0        1
-YearRemodAdd1993     -2.13e+01   5.74e+05       0        1
-YearRemodAdd1994      1.52e+01   5.65e+05       0        1
-YearRemodAdd1995     -7.80e+00   4.40e+05       0        1
-YearRemodAdd1996     -1.69e+01   3.75e+05       0        1
-YearRemodAdd1997      1.69e+01   4.72e+05       0        1
-YearRemodAdd1998      1.93e+01   4.15e+05       0        1
-YearRemodAdd1999     -1.81e+01   3.93e+05       0        1
-YearRemodAdd2000      2.63e+00   4.68e+05       0        1
-YearRemodAdd2001      4.34e-01   4.95e+05       0        1
-YearRemodAdd2002      3.10e+01   3.72e+05       0        1
-YearRemodAdd2003      1.74e+01   4.39e+05       0        1
-YearRemodAdd2004     -5.74e+00   3.87e+05       0        1
-YearRemodAdd2005      1.70e+01   4.28e+05       0        1
-YearRemodAdd2006      1.35e+01   4.08e+05       0        1
-YearRemodAdd2007      2.35e+01   4.20e+05       0        1
-YearRemodAdd2008      1.84e+01   4.15e+05       0        1
-YearRemodAdd2009      1.91e+01   4.73e+05       0        1
-YearRemodAdd2010      4.60e+00   5.15e+05       0        1
-RoofStyleGable        8.00e+01   1.15e+06       0        1
-RoofStyleGambrel      1.33e+02   3.29e+06       0        1
-RoofStyleHip          8.50e+01   1.15e+06       0        1
-RoofStyleMansard     -6.90e-01   4.75e+07       0        1
-RoofStyleShed               NA         NA      NA       NA
-RoofMatlCompShg      -1.43e+02   2.56e+06       0        1
-RoofMatlMembran      -1.79e+02   4.27e+06       0        1
-RoofMatlMetal               NA         NA      NA       NA
-RoofMatlRoll         -1.60e+02   2.82e+06       0        1
-`RoofMatlTar&amp;Grv`    -8.83e+01   3.07e+06       0        1
-RoofMatlWdShake      -1.57e+02   4.75e+07       0        1
-RoofMatlWdShngl      -2.79e+02   2.81e+06       0        1
-Exterior1stAsphShn          NA         NA      NA       NA
-Exterior1stBrkComm          NA         NA      NA       NA
-Exterior1stBrkFace    2.07e-01   2.97e+06       0        1
-Exterior1stCBlock    -2.41e+01   1.24e+06       0        1
-Exterior1stCemntBd    1.68e+02   3.22e+06       0        1
-Exterior1stHdBoard   -8.77e+00   3.20e+06       0        1
-Exterior1stImStucc    1.86e+02   3.60e+06       0        1
-Exterior1stMetalSd   -3.76e+01   3.36e+06       0        1
-Exterior1stPlywood    4.68e-01   3.31e+06       0        1
-Exterior1stStone            NA         NA      NA       NA
-Exterior1stStucco     8.42e+00   3.25e+06       0        1
-Exterior1stVinylSd   -4.24e+01   3.22e+06       0        1
-`Exterior1stWd Sdng`  5.13e+00   3.25e+06       0        1
-Exterior1stWdShing    3.03e+01   3.27e+06       0        1
-Exterior2ndAsphShn   -7.73e+01   4.76e+07       0        1
-`Exterior2ndBrk Cmn` -8.70e+01   3.15e+06       0        1
-Exterior2ndBrkFace   -9.04e+01   2.94e+06       0        1
-Exterior2ndCBlock           NA         NA      NA       NA
-Exterior2ndCmentBd   -2.65e+02   3.18e+06       0        1
-Exterior2ndHdBoard   -6.07e+01   3.12e+06       0        1
-Exterior2ndImStucc   -2.75e+02   3.48e+06       0        1
-Exterior2ndMetalSd   -1.09e+01   3.32e+06       0        1
-Exterior2ndOther     -2.40e+02   3.28e+06       0        1
-Exterior2ndPlywood   -5.71e+01   3.13e+06       0        1
-Exterior2ndStone            NA         NA      NA       NA
-Exterior2ndStucco    -3.73e+01   2.74e+06       0        1
-Exterior2ndVinylSd   -3.49e+01   3.15e+06       0        1
-`Exterior2ndWd Sdng` -8.15e+01   3.11e+06       0        1
-`Exterior2ndWd Shng` -1.02e+02   3.08e+06       0        1
-MasVnrTypeBrkFace     5.48e+01   1.27e+06       0        1
-MasVnrTypeNone        3.69e+01   1.26e+06       0        1
-MasVnrTypeStone       5.72e+01   1.31e+06       0        1
-ExterQualFa           4.25e+01   7.19e+05       0        1
-ExterQualGd           4.46e+01   3.75e+05       0        1
-ExterQualTA           3.52e+01   5.38e+05       0        1
-ExterCondFa           2.66e+01   4.75e+07       0        1
-ExterCondGd           5.31e+01   4.75e+07       0        1
-ExterCondPo                 NA         NA      NA       NA
-ExterCondTA           6.80e+01   4.75e+07       0        1
-FoundationCBlock     -2.29e+01   2.86e+05       0        1
-FoundationPConc      -1.30e+01   3.68e+05       0        1
-FoundationSlab              NA         NA      NA       NA
-FoundationStone      -1.99e+01   2.24e+06       0        1
-FoundationWood        6.00e+00   1.15e+06       0        1
-BsmtQualFa            8.89e+01   3.68e+05       0        1
-BsmtQualGd            4.31e+01   2.07e+05       0        1
-BsmtQualTA            6.20e+01   2.92e+05       0        1
-BsmtCondGd            1.90e+00   3.30e+05       0        1
-BsmtCondPo            1.01e+01   2.49e+06       0        1
-BsmtCondTA           -2.50e+01   3.31e+05       0        1
-BsmtExposureGd        3.43e+01   1.47e+05       0        1
-BsmtExposureMn       -8.43e-01   1.41e+05       0        1
-BsmtExposureNo        1.27e+00   8.39e+04       0        1
-BsmtFinType1BLQ      -2.81e+00   1.94e+05       0        1
-BsmtFinType1GLQ      -2.97e+01   1.23e+05       0        1
-BsmtFinType1LwQ      -2.13e+01   2.88e+05       0        1
-BsmtFinType1Rec      -2.54e+00   1.85e+05       0        1
-BsmtFinType1Unf      -2.61e+01   1.73e+05       0        1
-BsmtFinType2BLQ       2.78e+01   7.40e+05       0        1
-BsmtFinType2GLQ      -7.75e+00   6.54e+05       0        1
-BsmtFinType2LwQ       1.70e+01   6.89e+05       0        1
-BsmtFinType2Rec       6.27e+00   8.01e+05       0        1
-BsmtFinType2Unf       1.92e-01   7.10e+05       0        1
-HeatingGasA          -2.65e+02   1.67e+06       0        1
-HeatingGasW          -2.65e+02   1.64e+06       0        1
-HeatingGrav                 NA         NA      NA       NA
-HeatingOthW                 NA         NA      NA       NA
-HeatingWall                 NA         NA      NA       NA
-HeatingQCFa          -4.12e+01   6.67e+05       0        1
-HeatingQCGd          -1.25e+01   1.19e+05       0        1
-HeatingQCPo           2.40e+00   8.33e+05       0        1
-HeatingQCTA           5.67e+00   1.96e+05       0        1
-CentralAirY          -4.21e+01   6.37e+05       0        1
-ElectricalFuseF       5.76e+01   6.49e+05       0        1
-ElectricalFuseP       6.15e+01   1.25e+06       0        1
-ElectricalMix               NA         NA      NA       NA
-ElectricalSBrkr       2.64e+01   2.32e+05       0        1
-KitchenQualFa        -1.82e+01   5.04e+05       0        1
-KitchenQualGd         3.41e+01   2.13e+05       0        1
-KitchenQualTA         3.62e+01   2.69e+05       0        1
-FunctionalMaj2       -2.84e+01   1.44e+06       0        1
-FunctionalMin1       -4.47e+01   9.55e+05       0        1
-FunctionalMin2       -3.45e+00   1.18e+06       0        1
-FunctionalMod        -6.07e+01   2.06e+06       0        1
-FunctionalSev               NA         NA      NA       NA
-FunctionalTyp        -3.53e+01   9.85e+05       0        1
-GarageTypeAttchd      2.24e+01   1.23e+06       0        1
-GarageTypeBasment     1.78e+01   1.18e+06       0        1
-GarageTypeBuiltIn     6.34e+01   1.24e+06       0        1
-GarageTypeCarPort     6.17e+01   2.87e+06       0        1
-GarageTypeDetchd      7.43e-01   1.27e+06       0        1
-GarageFinishRFn      -6.23e+00   1.02e+05       0        1
-GarageFinishUnf       2.95e+00   1.92e+05       0        1
-GarageQualFa         -2.89e+01   1.20e+06       0        1
-GarageQualGd          1.55e+00   1.53e+06       0        1
-GarageQualPo          5.11e+01   4.61e+06       0        1
-GarageQualTA         -7.86e+00   1.35e+06       0        1
-GarageCondFa          5.24e+01   4.04e+05       0        1
-GarageCondGd         -4.29e+00   9.74e+05       0        1
-GarageCondPo          5.25e+00   2.84e+06       0        1
-GarageCondTA                NA         NA      NA       NA
-PavedDriveP          -2.96e+01   8.04e+05       0        1
-PavedDriveY          -1.46e+01   3.44e+05       0        1
+Coefficients: (9 not defined because of singularities)
+                     Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)          1.88e+02   4.75e+07       0        1
+SalePrice            2.39e+02   7.86e+04       0        1
+LotFrontage          9.51e+00   4.46e+04       0        1
+LotArea             -2.29e+01   7.81e+04       0        1
+OverallQual         -5.54e+00   4.02e+04       0        1
+OverallCond         -7.62e+00   3.32e+04       0        1
+MasVnrArea          -9.07e+00   2.09e+04       0        1
+BsmtFinSF1          -2.50e+01   7.21e+04       0        1
+BsmtFinSF2          -4.51e+00   3.55e+04       0        1
+BsmtUnfSF           -2.26e+01   6.36e+04       0        1
+TotalBsmtSF                NA         NA      NA       NA
+X1stFlrSF           -2.54e+01   5.60e+04       0        1
+X2ndFlrSF            1.50e+01   8.01e+04       0        1
+LowQualFinSF         1.74e+01   3.64e+04       0        1
+GrLivArea                  NA         NA      NA       NA
+BsmtFullBath        -3.98e+00   1.45e+04       0        1
+BsmtHalfBath         1.19e+00   1.84e+04       0        1
+FullBath            -4.26e+00   3.71e+04       0        1
+HalfBath             5.39e+00   5.90e+04       0        1
+BedroomAbvGr         2.73e+00   2.87e+04       0        1
+KitchenAbvGr         1.32e+01   1.02e+05       0        1
+TotRmsAbvGrd        -1.24e+00   5.26e+04       0        1
+Fireplaces           5.89e+00   2.11e+04       0        1
+GarageCars           8.58e+00   5.24e+04       0        1
+GarageArea           5.29e+00   4.83e+04       0        1
+WoodDeckSF           4.64e-01   1.82e+04       0        1
+OpenPorchSF         -6.06e+00   3.43e+04       0        1
+EnclosedPorch       -1.45e+01   1.93e+04       0        1
+X3SsnPorch          -1.41e+00   1.57e+04       0        1
+ScreenPorch         -1.27e+01   2.40e+04       0        1
+PoolArea            -7.33e-01   1.42e+04       0        1
+MiscVal              9.27e+00   1.79e+04       0        1
+MSZoningFV          -9.92e+01   7.33e+05       0        1
+MSZoningRH          -1.28e+02   6.39e+05       0        1
+MSZoningRL          -1.29e+02   6.58e+05       0        1
+MSZoningRM          -1.21e+02   5.79e+05       0        1
+StreetPave           7.00e+01   6.54e+05       0        1
+LandContourHLS      -5.57e+01   2.35e+05       0        1
+LandContourLow      -3.29e+01   6.51e+05       0        1
+LandContourLvl      -4.56e+01   2.05e+05       0        1
+LotConfigCulDSac     3.15e+00   2.57e+05       0        1
+LotConfigFR2        -3.51e+00   7.46e+04       0        1
+LotConfigFR3        -2.97e+01   4.78e+05       0        1
+LotConfigInside     -1.87e+01   4.09e+04       0        1
+LandSlopeMod         2.01e+01   1.81e+05       0        1
+LandSlopeSev         8.67e+01   4.95e+05       0        1
+NeighborhoodBlueste  7.44e+01   3.42e+05       0        1
+NeighborhoodBrDale   2.00e+02   2.14e+05       0        1
+NeighborhoodBrkSide  6.93e+01   2.79e+05       0        1
+NeighborhoodClearCr  5.35e+01   2.00e+05       0        1
+NeighborhoodCollgCr  5.80e+01   1.64e+05       0        1
+NeighborhoodCrawfor  4.08e+01   2.60e+05       0        1
+NeighborhoodEdwards  1.64e+01   1.53e+05       0        1
+NeighborhoodGilbert  1.62e+01   1.64e+05       0        1
+NeighborhoodIDOTRR   7.26e+01   3.43e+05       0        1
+NeighborhoodMeadowV  1.04e+02   3.29e+05       0        1
+NeighborhoodMitchel  6.28e+01   2.32e+05       0        1
+NeighborhoodNAmes    6.57e+01   1.62e+05       0        1
+NeighborhoodNoRidge  4.48e+01   2.40e+05       0        1
+NeighborhoodNPkVill  1.10e+02   2.08e+05       0        1
+NeighborhoodNridgHt  4.08e+01   1.42e+05       0        1
+NeighborhoodNWAmes   6.04e+01   1.56e+05       0        1
+NeighborhoodOldTown  1.06e+02   3.01e+05       0        1
+NeighborhoodSawyer   8.74e+01   1.67e+05       0        1
+NeighborhoodSawyerW  4.65e+01   1.51e+05       0        1
+NeighborhoodSomerst  1.72e+01   2.71e+05       0        1
+NeighborhoodStoneBr  5.92e+01   1.41e+05       0        1
+NeighborhoodSWISU    7.59e+01   2.60e+05       0        1
+NeighborhoodTimber   7.14e+01   1.65e+05       0        1
+NeighborhoodVeenker -8.37e+01   4.74e+05       0        1
+BldgType2fmCon      -2.80e+01   4.36e+05       0        1
+BldgTypeDuplex      -5.14e+01   5.51e+05       0        1
+BldgTypeTwnhs        8.32e+00   1.66e+05       0        1
+BldgTypeTwnhsE       5.80e+00   1.10e+05       0        1
+HouseStyle1.5Unf     6.86e+01   3.68e+05       0        1
+HouseStyle1Story     7.68e+01   1.69e+05       0        1
+HouseStyle2.5Fin    -2.07e+02   3.74e+05       0        1
+HouseStyle2.5Unf    -1.41e+02   7.50e+05       0        1
+HouseStyle2Story    -2.64e+01   1.30e+05       0        1
+HouseStyleSFoyer     6.30e+01   2.32e+05       0        1
+HouseStyleSLvl       1.53e+01   1.76e+05       0        1
+MasVnrTypeBrkFace    4.07e+01   3.94e+05       0        1
+MasVnrTypeNone       3.04e+01   3.99e+05       0        1
+MasVnrTypeStone      5.48e+01   3.93e+05       0        1
+ExterQualFa          9.46e+01   6.38e+05       0        1
+ExterQualGd          4.06e+01   2.69e+05       0        1
+ExterQualTA          4.22e+01   2.95e+05       0        1
+ExterCondFa          8.27e+01   4.75e+07       0        1
+ExterCondGd          7.32e+01   4.75e+07       0        1
+ExterCondPo                NA         NA      NA       NA
+ExterCondTA          7.02e+01   4.75e+07       0        1
+FoundationCBlock    -3.26e+01   1.77e+05       0        1
+FoundationPConc     -3.17e+01   1.84e+05       0        1
+FoundationSlab             NA         NA      NA       NA
+FoundationStone      1.45e+01   1.28e+06       0        1
+FoundationWood       1.94e+00   4.01e+05       0        1
+BsmtCondGd           4.12e+01   3.04e+05       0        1
+BsmtCondPo           1.58e+02   6.03e+05       0        1
+BsmtCondTA           2.43e+01   2.74e+05       0        1
+BsmtExposureGd       2.20e+01   5.24e+04       0        1
+BsmtExposureMn       8.73e+00   5.02e+04       0        1
+BsmtExposureNo       8.67e+00   2.75e+04       0        1
+HeatingGasA         -2.84e+02   6.62e+05       0        1
+HeatingGasW         -2.44e+02   7.08e+05       0        1
+HeatingGrav                NA         NA      NA       NA
+HeatingOthW                NA         NA      NA       NA
+HeatingWall                NA         NA      NA       NA
+HeatingQCFa         -3.18e+01   1.19e+05       0        1
+HeatingQCGd         -1.81e+01   5.53e+04       0        1
+HeatingQCPo          1.61e+02   4.74e+05       0        1
+HeatingQCTA          9.30e+00   6.37e+04       0        1
+CentralAirY         -2.53e+01   2.55e+05       0        1
+ElectricalFuseF      1.96e+01   2.83e+05       0        1
+ElectricalFuseP      1.74e+01   1.20e+06       0        1
+ElectricalMix              NA         NA      NA       NA
+ElectricalSBrkr     -2.18e+01   1.04e+05       0        1
+KitchenQualFa        6.51e+01   2.97e+05       0        1
+KitchenQualGd        5.01e+01   2.08e+05       0        1
+KitchenQualTA        6.61e+01   2.27e+05       0        1
+FunctionalMaj2      -2.56e+01   4.58e+05       0        1
+FunctionalMin1      -3.01e+01   3.65e+05       0        1
+FunctionalMin2      -2.85e+01   4.15e+05       0        1
+FunctionalMod       -1.06e+02   9.63e+05       0        1
+FunctionalSev              NA         NA      NA       NA
+FunctionalTyp       -3.22e+01   2.40e+05       0        1
+GarageFinishRFn     -8.06e+00   4.24e+04       0        1
+GarageFinishUnf      1.87e+00   5.79e+04       0        1
+PavedDriveP         -2.09e+01   2.47e+05       0        1
+PavedDriveY         -2.54e+01   1.02e+05       0        1
 
 (Dispersion parameter for binomial family taken to be 1)
 
     Null deviance: 9.8328e+02  on 764  degrees of freedom
-Residual deviance: 4.1550e-08  on 519  degrees of freedom
-AIC: 492
+Residual deviance: 1.1399e-07  on 645  degrees of freedom
+AIC: 240
 
 Number of Fisher Scoring iterations: 25</code></pre>
 </div>
 </div>
 <p>El modelo indica la significancia de las variable con un *</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>variables_significativas <span class="ot">&lt;-</span> model_summary<span class="sc">$</span>coefficients[model_summary<span class="sc">$</span>coefficients[, <span class="dv">4</span>] <span class="sc">&lt;</span> <span class="fl">0.01</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>columnas_significativas <span class="ot">&lt;-</span> <span class="fu">rownames</span>(variables_significativas[<span class="fu">order</span>(<span class="fu">abs</span>(variables_significativas[, <span class="dv">1</span>]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>columnas_significativas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>variables_significativas <span class="ot">&lt;-</span> model_summary<span class="sc">$</span>coefficients[model_summary<span class="sc">$</span>coefficients[, <span class="dv">4</span>] <span class="sc">&lt;</span> <span class="fl">0.01</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>columnas_significativas <span class="ot">&lt;-</span> <span class="fu">rownames</span>(variables_significativas[<span class="fu">order</span>(<span class="fu">abs</span>(variables_significativas[, <span class="dv">1</span>]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>columnas_significativas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>NULL</code></pre>
 </div>
 </div>
-<p>Como se puede observar al tener el modelo con todas las variables se obteiene que ninguna variable es significativa, por lo tanto se procede a realizar el modelo con las variables numericas y variables que se consideran significativas.</p>
-</section>
-<section id="análisis-de-correlación-y-ajuste-de-modelo" class="level3">
-<h3 class="anchored" data-anchor-id="análisis-de-correlación-y-ajuste-de-modelo">1.5.1 Análisis de correlación y ajuste de modelo</h3>
+<p>Como se puede observar al tener el modelo con todas las variables se obteiene que ninguna variable es significativa, por lo tanto se procedió a realizar el modelo con las variables numericas para observar si estas tienen más significancia. Previo a esto se realizó un análisis de correlación entre las variables y se observó que tan bien se ajusta este modelo realizado.</p>
+<section id="análisis-de-correlación-y-ajuste-de-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-de-correlación-y-ajuste-de-modelo">3.1.1 Análisis de correlación y ajuste de modelo</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>datos_cor <span class="ot">&lt;-</span> datos_con_dummy[, numeric_variables]</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>datos_cor <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_cor, <span class="sc">-</span>SalePrice)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>correlacion <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_cor)</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(correlacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>datos_cor <span class="ot">&lt;-</span> datos_con_dummy[, numeric_variables]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>datos_cor <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_cor, <span class="sc">-</span>SalePrice)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>correlacion <span class="ot">&lt;-</span> <span class="fu">cor</span>(datos_cor)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(correlacion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="MD_HDT6_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -670,40 +436,40 @@ Number of Fisher Scoring iterations: 25</code></pre>
 <li>GarageArea: OverallQual, TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, TotRmsAbvGrd, GarageCars</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
           Reference
 Prediction   0   1
-         0 185  13
-         1  33  98
+         0 206   9
+         1  12 102
                                           
-               Accuracy : 0.8602          
-                 95% CI : (0.8179, 0.8958)
+               Accuracy : 0.9362          
+                 95% CI : (0.9041, 0.9601)
     No Information Rate : 0.6626          
-    P-Value [Acc &gt; NIR] : 3.098e-16       
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
                                           
-                  Kappa : 0.7005          
+                  Kappa : 0.8582          
                                           
- Mcnemar's Test P-Value : 0.005088        
+ Mcnemar's Test P-Value : 0.6625          
                                           
-            Sensitivity : 0.8486          
-            Specificity : 0.8829          
-         Pos Pred Value : 0.9343          
-         Neg Pred Value : 0.7481          
+            Sensitivity : 0.9450          
+            Specificity : 0.9189          
+         Pos Pred Value : 0.9581          
+         Neg Pred Value : 0.8947          
              Prevalence : 0.6626          
-         Detection Rate : 0.5623          
-   Detection Prevalence : 0.6018          
-      Balanced Accuracy : 0.8658          
+         Detection Rate : 0.6261          
+   Detection Prevalence : 0.6535          
+      Balanced Accuracy : 0.9319          
                                           
        'Positive' Class : 0               
                                           </code></pre>
@@ -711,90 +477,56 @@ Prediction   0   1
 </div>
 <p>Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.87. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train &lt;- train[, numeric_variables2]</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train &lt;- train[, numeric_variables2]</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in makeTask(type = type, data = data, weights = weights,
 blocking = blocking, : Empty factor levels were dropped for columns:
-Condition1,RoofStyle,RoofMatl,Exterior1st,Exterior2nd,ExterCond,Foundation,Heating,Functional</code></pre>
+ExterCond,Foundation,Heating,Functional</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="MD_HDT6_files/figure-html/curva_de_aprendizaje-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Al tener el accuracy con un 86% y al observar las curvas de aprendizaje se puede concluir que el modelo tiene overfitting. La curva de balance de error en training siempre está en 0 y nunca converge con la curva de test. Con un accuracy tan alto y pocas variables significativas, se concluye lo mencionado.</p>
 </section>
+</section>
 <section id="modelo-con-variables-numéricas" class="level3">
-<h3 class="anchored" data-anchor-id="modelo-con-variables-numéricas">1.6 Modelo con variables numéricas</h3>
+<h3 class="anchored" data-anchor-id="modelo-con-variables-numéricas">3.2 Modelo con variables numéricas</h3>
+<section id="creación-de-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="creación-de-modelo">3.2.1 Creación de modelo</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>numeric_variables2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"LotFrontage"</span>, <span class="st">"LotArea"</span>, <span class="st">"OverallQual"</span>, <span class="st">"OverallCond"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtFinSF2"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"TotalBsmtSF"</span>, <span class="st">"X1stFlrSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"LowQualFinSF"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"BsmtHalfBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"HalfBath"</span>, <span class="st">"BedroomAbvGr"</span>, <span class="st">"KitchenAbvGr"</span>, <span class="st">"TotRmsAbvGrd"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"GarageCars"</span>, <span class="st">"GarageArea"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"EnclosedPorch"</span>, <span class="st">"X3SsnPorch"</span>, <span class="st">"ScreenPorch"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -SalePrice)</span></span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -Utilities)</span></span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> datos_con_dummy[, numeric_variables2]</span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_num), <span class="fu">nrow</span>(datos_num) <span class="sc">*</span> porcentaje)</span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos_num[corte, ]</span>
-<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_num[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading
-
-Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading
-
-Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading
-
-Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading
-
-Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading
-
-Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading
-
-Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: algorithm did not converge</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading
-
-Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
-prediction from a rank-deficient fit may be misleading</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>numeric_variables2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"LotFrontage"</span>, <span class="st">"LotArea"</span>, <span class="st">"OverallQual"</span>, <span class="st">"OverallCond"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtFinSF2"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"TotalBsmtSF"</span>, <span class="st">"X1stFlrSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"LowQualFinSF"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"BsmtHalfBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"HalfBath"</span>, <span class="st">"BedroomAbvGr"</span>, <span class="st">"KitchenAbvGr"</span>, <span class="st">"TotRmsAbvGrd"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"GarageCars"</span>, <span class="st">"GarageArea"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"EnclosedPorch"</span>, <span class="st">"X3SsnPorch"</span>, <span class="st">"ScreenPorch"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -SalePrice)</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -Utilities)</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> datos_con_dummy[, numeric_variables2]</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_num), <span class="fu">nrow</span>(datos_num) <span class="sc">*</span> porcentaje)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos_num[corte, ]</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_num[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary, <span class="at">signif.stars =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>pm2 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>AIC2 <span class="ot">&lt;-</span> <span class="fu">AIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>BIC2 <span class="ot">&lt;-</span> <span class="fu">BIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary, <span class="at">signif.stars =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -851,26 +583,351 @@ Number of Fisher Scoring iterations: 7</code></pre>
 </div>
 <p>Como se puede observar el modelo indica la significancia de las variable con un *, pero nosotros designamos las varibales que tienen un valor de significaia menor a 0.01, las cuales son:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>variables_significativas <span class="ot">&lt;-</span> model_summary<span class="sc">$</span>coefficients[model_summary<span class="sc">$</span>coefficients[, <span class="dv">4</span>] <span class="sc">&lt;</span> <span class="fl">0.01</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>columnas_significativas <span class="ot">&lt;-</span> <span class="fu">rownames</span>(variables_significativas[<span class="fu">order</span>(<span class="fu">abs</span>(variables_significativas[, <span class="dv">1</span>]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>columnas_significativas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>variables_significativas <span class="ot">&lt;-</span> model_summary<span class="sc">$</span>coefficients[model_summary<span class="sc">$</span>coefficients[, <span class="dv">4</span>] <span class="sc">&lt;</span> <span class="fl">0.01</span>, , drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>columnas_significativas <span class="ot">&lt;-</span> <span class="fu">rownames</span>(variables_significativas[<span class="fu">order</span>(<span class="fu">abs</span>(variables_significativas[, <span class="dv">1</span>]), <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>columnas_significativas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "(Intercept)" "OverallQual" "BsmtUnfSF"   "PoolArea"    "FullBath"   </code></pre>
 </div>
 </div>
 <p>Como se puede hay varias variables que son significativas para el modelo, con lo que teniendo eliminadas las columnas que no aportan al modelo. Hay otras variables como TotalBsmtSF y GrLivArea que no aportan nada al modelo.</p>
+</section>
 <section id="análisis-de-ajuste-de-modelo" class="level4">
-<h4 class="anchored" data-anchor-id="análisis-de-ajuste-de-modelo">1.6.1 Análisis de ajuste de modelo</h4>
+<h4 class="anchored" data-anchor-id="análisis-de-ajuste-de-modelo">3.2.2 Análisis de ajuste de modelo</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>cf1 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.89. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Al tener el accuracy con un 89% y al observar las curvas de aprendizaje se puede concluir que el modelo tiene NO tiene overfitting. La curva de balance de error en training y de test convergen en cierto punto y se quedan relativamente constantes. Esto es lo que indica que tanto test como train son similares, por lo que es probable que NO haya overfitting con las variables numéricas únicamente.</p>
+</section>
+</section>
+<section id="dos-modelos-adicionales-cambiando-variables-predictoras." class="level3">
+<h3 class="anchored" data-anchor-id="dos-modelos-adicionales-cambiando-variables-predictoras.">7. Dos modelos adicionales cambiando variables predictoras.</h3>
+<section id="primer-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="primer-modelo">7.1 Primer modelo</h4>
+</section>
+<section id="creación-de-modelo-1" class="level4">
+<h4 class="anchored" data-anchor-id="creación-de-modelo-1">7.1.1 Creación de modelo</h4>
+<p>Luego de observar las variables significativas numéricas se utilizarán OverallQual, BsmtFinSF1, BsmtUnfSF, X2ndFlrSF, Fullbath, PoolArea, MiscVal y BsmtFullBath porque son las que indican significancia en el modelo. Además, de las cualitativas se usarán Neighborhood, HouseStyle, Heating, Electrical, KitchenQual, LotConfig y ExterCond. A pesar de que las cualitativas no dieron nivel de significancia, pero se probará con las mencionadas porque pueden tener influencia al momento de darle valor a una casa.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>variables_m1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>,<span class="st">"Neighborhood"</span>, <span class="st">"HouseStyle"</span>, <span class="st">"Heating"</span>, <span class="st">"Electrical"</span>, <span class="st">"KitchenQual"</span>, <span class="st">"LotConfig"</span>, <span class="st">"ExterCond"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -SalePrice)</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -Utilities)</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>datos_m1 <span class="ot">&lt;-</span> datos_con_dummy[, variables_m1]</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_m1), <span class="fu">nrow</span>(datos_m1) <span class="sc">*</span> porcentaje)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos_m1[corte, ]</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_m1[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>pm3 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>AIC3 <span class="ot">&lt;-</span> <span class="fu">AIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>BIC3 <span class="ot">&lt;-</span> <span class="fu">BIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary, <span class="at">signif.stars =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+NULL
+
+Deviance Residuals: 
+   Min      1Q  Median      3Q     Max  
+-8.490  -0.148  -0.003   0.087   2.547  
+
+Coefficients: (3 not defined because of singularities)
+                     Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)          2.55e+13   1.94e+14    0.13  0.89543    
+OverallQual          2.05e+00   3.84e-01    5.33  9.7e-08 ***
+BsmtFinSF1           9.74e-01   3.25e-01    3.00  0.00274 ** 
+BsmtUnfSF            6.73e-01   3.28e-01    2.05  0.04026 *  
+X2ndFlrSF            4.56e+00   8.70e-01    5.24  1.6e-07 ***
+BsmtFullBath         2.02e-01   2.44e-01    0.83  0.40785    
+FullBath             4.92e-01   2.76e-01    1.78  0.07482 .  
+PoolArea            -1.11e+00   2.90e-01   -3.82  0.00013 ***
+MiscVal              3.71e-01   1.62e-01    2.29  0.02180 *  
+NeighborhoodBlueste -2.09e+01   2.40e+05    0.00  0.99993    
+NeighborhoodBrDale   4.87e-01   8.22e+00    0.06  0.95276    
+NeighborhoodBrkSide  4.31e+00   1.52e+00    2.83  0.00464 ** 
+NeighborhoodClearCr  2.09e+00   1.33e+00    1.57  0.11654    
+NeighborhoodCollgCr  1.83e+00   8.89e-01    2.06  0.03965 *  
+NeighborhoodCrawfor  3.24e+00   1.19e+00    2.71  0.00666 ** 
+NeighborhoodEdwards -3.05e-01   1.42e+00   -0.21  0.82994    
+NeighborhoodGilbert -3.09e-01   1.10e+00   -0.28  0.77851    
+NeighborhoodIDOTRR  -1.87e+01   5.79e+04    0.00  0.99974    
+NeighborhoodMeadowV -2.34e+01   1.19e+05    0.00  0.99984    
+NeighborhoodMitchel  1.60e+00   1.38e+00    1.16  0.24729    
+NeighborhoodNAmes    1.30e+00   1.09e+00    1.20  0.23184    
+NeighborhoodNoRidge  1.59e+00   1.45e+00    1.09  0.27414    
+NeighborhoodNPkVill -3.64e+01   1.32e+05    0.00  0.99978    
+NeighborhoodNridgHt  1.87e+00   1.01e+00    1.84  0.06584 .  
+NeighborhoodNWAmes   2.10e+00   1.05e+00    2.01  0.04474 *  
+NeighborhoodOldTown -3.52e+00   2.94e+00   -1.20  0.23092    
+NeighborhoodSawyer  -1.14e+01   8.25e+04    0.00  0.99989    
+NeighborhoodSawyerW  1.44e+00   1.05e+00    1.37  0.17141    
+NeighborhoodSomerst  2.04e+00   9.28e-01    2.19  0.02819 *  
+NeighborhoodStoneBr  2.49e+01   8.47e+04    0.00  0.99977    
+NeighborhoodSWISU   -2.86e+00   2.27e+00   -1.26  0.20759    
+NeighborhoodTimber   7.50e-01   1.22e+00    0.62  0.53810    
+NeighborhoodVeenker  1.36e+00   5.56e+00    0.24  0.80730    
+HouseStyle1.5Unf    -1.02e+01   5.93e+04    0.00  0.99986    
+HouseStyle1Story     8.02e+00   1.81e+00    4.42  9.7e-06 ***
+HouseStyle2.5Fin     2.48e+00   2.05e+00    1.21  0.22555    
+HouseStyle2.5Unf    -3.70e+00   6.45e+00   -0.57  0.56656    
+HouseStyle2Story     5.25e-02   1.01e+00    0.05  0.95848    
+HouseStyleSFoyer     7.10e+00   2.19e+00    3.25  0.00117 ** 
+HouseStyleSLvl       9.72e-01   1.81e+00    0.54  0.59102    
+HeatingGasA         -2.55e+13   1.94e+14   -0.13  0.89543    
+HeatingGasW         -2.55e+13   1.94e+14   -0.13  0.89543    
+HeatingGrav         -2.55e+13   1.94e+14   -0.13  0.89543    
+HeatingOthW                NA         NA      NA       NA    
+HeatingWall                NA         NA      NA       NA    
+ElectricalFuseF     -1.97e+01   6.75e+04    0.00  0.99977    
+ElectricalFuseP      3.68e+02   2.42e+06    0.00  0.99988    
+ElectricalMix        2.27e+01   4.44e+05    0.00  0.99996    
+ElectricalSBrkr      9.74e-01   1.28e+00    0.76  0.44748    
+KitchenQualFa       -2.63e+01   6.01e+04    0.00  0.99965    
+KitchenQualGd       -1.47e+00   1.10e+00   -1.34  0.18181    
+KitchenQualTA       -2.75e+00   1.17e+00   -2.36  0.01844 *  
+LotConfigCulDSac     3.05e+00   1.01e+00    3.04  0.00240 ** 
+LotConfigFR2        -2.05e+00   9.94e-01   -2.06  0.03906 *  
+LotConfigFR3        -1.01e+00   1.61e+00   -0.62  0.53292    
+LotConfigInside     -2.01e-01   4.81e-01   -0.42  0.67524    
+ExterCondFa         -2.12e+01   2.59e+04    0.00  0.99935    
+ExterCondGd         -2.85e+00   6.86e+00   -0.42  0.67786    
+ExterCondPo                NA         NA      NA       NA    
+ExterCondTA         -2.38e+00   6.88e+00   -0.35  0.72985    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 983.28  on 764  degrees of freedom
+Residual deviance: 417.83  on 708  degrees of freedom
+AIC: 531.8
+
+Number of Fisher Scoring iterations: 25</code></pre>
+</div>
+</div>
+</section>
+<section id="análisis-de-ajuste-de-modelo-1" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-de-ajuste-de-modelo-1">7.1.2 Análisis de ajuste de modelo</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
+prediction from a rank-deficient fit may be misleading</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>cf2 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>cf2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 201  13
+         1  17  98
+                                          
+               Accuracy : 0.9088          
+                 95% CI : (0.8724, 0.9376)
+    No Information Rate : 0.6626          
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.7978          
+                                          
+ Mcnemar's Test P-Value : 0.5839          
+                                          
+            Sensitivity : 0.9220          
+            Specificity : 0.8829          
+         Pos Pred Value : 0.9393          
+         Neg Pred Value : 0.8522          
+             Prevalence : 0.6626          
+         Detection Rate : 0.6109          
+   Detection Prevalence : 0.6505          
+      Balanced Accuracy : 0.9025          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+<p>Al observar el accuracy del modelo, se puede observar que es de 0.91, un valor muy bueno. Además, el modelo es bueno para la identificación de verdaderos positivos y es ligeramente menos preciso para la identificación de verdaderos negativos. Sin embargo, parece ser un bueno modelo. Su AIC, de 531.8, es relativamente bajo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in makeTask(type = type, data = data, weights = weights, blocking =
+blocking, : Empty factor levels were dropped for columns: Heating,ExterCond</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">50</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Es posible observar que tanto la curva de entrenamiento como la de prueba, se van estabilizando al llegar al 100% de los datos. Además, ambas líneas son cercanas en valor. Esto puede indicar que el modelo no está haciendo overfitting.</p>
+</section>
+<section id="segundo-modelo" class="level4">
+<h4 class="anchored" data-anchor-id="segundo-modelo">7.2 Segundo modelo</h4>
+</section>
+<section id="creación-de-modelo-2" class="level4">
+<h4 class="anchored" data-anchor-id="creación-de-modelo-2">7.2.1 Creación de modelo</h4>
+<p>Luego de observar las variables significativas del modelo anterior, se usará OverallQual, BsmtFinSF1, X2ndFlrSF, PoolArea, NeighborhoodBrkSide, NeighborhoodCrawfor, HouseStyle1Story, HouseStyleSFoyer y LotConfigCulDSac.Estas son las que más significancia tienen.</p>
+<p>Para algunas variables categóricas se necesitará crear dummies.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastDummies)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>datos_con_dummy2 <span class="ot">&lt;-</span> <span class="fu">dummy_cols</span>(datos_con_dummy, <span class="at">select_columns =</span> <span class="fu">c</span>(<span class="st">"Neighborhood"</span>, <span class="st">"HouseStyle"</span>, <span class="st">"LotConfig"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>variables_m2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>,<span class="st">"Neighborhood_BrkSide"</span>, <span class="st">"Neighborhood_Crawfor"</span>, <span class="st">"HouseStyle_1Story"</span>, <span class="st">"HouseStyle_SFoyer"</span>, <span class="st">"LotConfig_CulDSac"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>datos_m2 <span class="ot">&lt;-</span> datos_con_dummy2[, variables_m2]</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_m2), <span class="fu">nrow</span>(datos_m2) <span class="sc">*</span> porcentaje)</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos_m2[corte, ]</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_m2[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary, <span class="at">signif.stars =</span> <span class="cn">TRUE</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+NULL
+
+Deviance Residuals: 
+   Min      1Q  Median      3Q     Max  
+-4.999  -0.284  -0.073   0.142   2.576  
+
+Coefficients:
+                     Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)            -5.362      0.734   -7.30  2.8e-13 ***
+OverallQual             2.881      0.299    9.65  &lt; 2e-16 ***
+BsmtFinSF1              1.325      0.281    4.72  2.4e-06 ***
+BsmtUnfSF               0.842      0.264    3.19  0.00140 ** 
+X2ndFlrSF               3.468      0.543    6.39  1.7e-10 ***
+PoolArea               -0.775      0.314   -2.47  0.01347 *  
+MiscVal                 0.270      0.147    1.83  0.06651 .  
+Neighborhood_BrkSide    2.073      0.774    2.68  0.00739 ** 
+Neighborhood_Crawfor    1.093      0.661    1.65  0.09836 .  
+HouseStyle_1Story       5.861      1.144    5.12  3.0e-07 ***
+HouseStyle_SFoyer       4.858      1.648    2.95  0.00319 ** 
+LotConfig_CulDSac       2.696      0.800    3.37  0.00075 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 983.28  on 764  degrees of freedom
+Residual deviance: 362.33  on 753  degrees of freedom
+AIC: 386.3
+
+Number of Fisher Scoring iterations: 7</code></pre>
+</div>
+</div>
+</section>
+<section id="análisis-de-ajuste-de-modelo-2" class="level4">
+<h4 class="anchored" data-anchor-id="análisis-de-ajuste-de-modelo-2">7.2.2 Análisis de ajuste de modelo</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>cf3 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>cf3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 204  20
+         1  14  91
+                                          
+               Accuracy : 0.8967          
+                 95% CI : (0.8586, 0.9274)
+    No Information Rate : 0.6626          
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.7658          
+                                          
+ Mcnemar's Test P-Value : 0.3912          
+                                          
+            Sensitivity : 0.9358          
+            Specificity : 0.8198          
+         Pos Pred Value : 0.9107          
+         Neg Pred Value : 0.8667          
+             Prevalence : 0.6626          
+         Detection Rate : 0.6201          
+   Detection Prevalence : 0.6809          
+      Balanced Accuracy : 0.8778          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+<p>Al observar el accuracy del modelo, se puede observar que es de 0.9, un valor muy bueno. Además, el modelo es bueno para la identificación de verdaderos positivos pero no lo es tanto para la identificación de valores verdaderamente falsos. Sin embargo, parece ser un bueno modelo. Su AIC, de 386.3, es relativamente bajo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">50</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Es posible observar que la curva de entrenamiento se va estabilizando al llegar al 100% de los datos. Sin embargo, la curva de prueba no se estabiliza y tiene un aumento cerca del 100%, lo cual indica que el modelo tiene overfitting. En este caso, usar las mejores variables del modelo anterior no fue adecuado.</p>
+</section>
+</section>
+<section id="análisis-de-eficiencia-del-algoritmo" class="level3">
+<h3 class="anchored" data-anchor-id="análisis-de-eficiencia-del-algoritmo">8. Análisis de eficiencia del algoritmo</h3>
+<p>Matriz de confusión primer modelo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>cf1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
@@ -901,22 +958,98 @@ Prediction   0   1
                                           </code></pre>
 </div>
 </div>
-<p>Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.89. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.</p>
+<p>Matriz de confusión segundo modelo</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
-<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>cf2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 201  13
+         1  17  98
+                                          
+               Accuracy : 0.9088          
+                 95% CI : (0.8724, 0.9376)
+    No Information Rate : 0.6626          
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.7978          
+                                          
+ Mcnemar's Test P-Value : 0.5839          
+                                          
+            Sensitivity : 0.9220          
+            Specificity : 0.8829          
+         Pos Pred Value : 0.9393          
+         Neg Pred Value : 0.8522          
+             Prevalence : 0.6626          
+         Detection Rate : 0.6109          
+   Detection Prevalence : 0.6505          
+      Balanced Accuracy : 0.9025          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
 </div>
 </div>
-<p>Al tener el accuracy con un 89% y al observar las curvas de aprendizaje se puede concluir que el modelo tiene NO tiene overfitting. La curva de balance de error en training y de test convergen en cierto punto y se quedan relativamente constantes. Esto es lo que indica que tanto test como train son similares, por lo que es probable que NO haya overfitting con las variables numéricas únicamente.</p>
+<p>Matriz de confusión tercer modelo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>cf3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 204  20
+         1  14  91
+                                          
+               Accuracy : 0.8967          
+                 95% CI : (0.8586, 0.9274)
+    No Information Rate : 0.6626          
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.7658          
+                                          
+ Mcnemar's Test P-Value : 0.3912          
+                                          
+            Sensitivity : 0.9358          
+            Specificity : 0.8198          
+         Pos Pred Value : 0.9107          
+         Neg Pred Value : 0.8667          
+             Prevalence : 0.6626          
+         Detection Rate : 0.6201          
+   Detection Prevalence : 0.6809          
+      Balanced Accuracy : 0.8778          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+<p>El primer modelo obtuvo un accuracy de 0.93, con un buen valor de specificity y sensitivity. Sin embargo, tenía overfitting. El segundo modelo tuvo un accuracy de 0.91. Fue bueno para verdaderos positivos y un poco menos para verdaderos negativos. El tercer modelo tuvo el peor accuracy, de 0.9. Su sensitivity fue buena, de 0.94, por lo que es bueno para verdaderos positivos pero su specificity no fue muy buena, de 0.82.</p>
+<p>Por otra parte, para el primer modelo su velocidad fue de 1.88 ms y su consumo de memoria 1.93787^{4} MB. Para el segundo modelo, 0.16 ms y 3642.8 MB. Para el tercer modelo 0.54 ms y 1.06573^{4} MB.</p>
 </section>
+<section id="determinación-de-que-modelo-es-mejor." class="level3">
+<h3 class="anchored" data-anchor-id="determinación-de-que-modelo-es-mejor.">9. Determinación de que modelo es mejor.</h3>
+<p>Se obtuvo el AIC y BIC para cada modelo. Para el primero modelo se obtuvo un AIC de 240.0000001 y un BIC de 796.7851002. Para el segundo modelo se obtuvo un AIC de 384.4769203 y un BIC de 519.0333195. Para el tercer modelo se obtuvo un AIC de 531.8277754 y un BIC de 796.3006979.</p>
+<p>Se puede determinar que el segundo modelo es el mejor. Por un lado, se evidenció que no tiene overfitting. Su accuracy fue el segundo mejor, además el balance que tiene en la identificación de verdaderos positivos y verdaderos negativos, lo hace ser mejor que los otros dos modelos. Tiene la mejor velocidad y el menor uso de memoria de los tres. Finalmente, tiene el mejor balance entre AIC y BIC, siendo estos valores bastante bajos. El primer modelo tiene un AIC más bajo pero un BIC mucho más alto.</p>
+</section>
+<section id="creación-de-otros-modelos-adicionales." class="level3">
+<h3 class="anchored" data-anchor-id="creación-de-otros-modelos-adicionales.">10. Creación de otros modelos adicionales.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># USEN ESTAS VARIABLES PARA PREDECIR EN LOS MODELOS</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>variables_models <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"LotFrontage"</span>, <span class="st">"LotArea"</span>, <span class="st">"OverallQual"</span>, <span class="st">"OverallCond"</span>, <span class="st">"MasVnrArea"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtFinSF2"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"TotalBsmtSF"</span>, <span class="st">"X1stFlrSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"LowQualFinSF"</span>, <span class="st">"GrLivArea"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"BsmtHalfBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"HalfBath"</span>, <span class="st">"BedroomAbvGr"</span>, <span class="st">"KitchenAbvGr"</span>, <span class="st">"TotRmsAbvGrd"</span>, <span class="st">"Fireplaces"</span>, <span class="st">"GarageCars"</span>, <span class="st">"GarageArea"</span>, <span class="st">"WoodDeckSF"</span>, <span class="st">"OpenPorchSF"</span>, <span class="st">"EnclosedPorch"</span>, <span class="st">"X3SsnPorch"</span>, <span class="st">"ScreenPorch"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>, <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="árbol-de-decisión" class="level4">
+<h4 class="anchored" data-anchor-id="árbol-de-decisión">10.1 Árbol de decisión</h4>
+</section>
+<section id="random-forest" class="level4">
+<h4 class="anchored" data-anchor-id="random-forest">10.2 Random Forest</h4>
+</section>
+<section id="naive-bayes" class="level4">
+<h4 class="anchored" data-anchor-id="naive-bayes">10.3 Naive Bayes</h4>
+</section>
+</section>
+<section id="comparación-de-eficiencia-entre-modelos." class="level3">
+<h3 class="anchored" data-anchor-id="comparación-de-eficiencia-entre-modelos.">11. Comparación de eficiencia entre modelos.</h3>
 </section>
 </section>
 
