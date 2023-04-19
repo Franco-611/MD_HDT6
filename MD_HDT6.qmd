@@ -66,14 +66,14 @@ faltantes_por_col
 Se puede observar que PoolQC tiene demasiados datos faltantes, al igual que Fence, Alley, MiscFeature y FireplaceQu. Por lo tanto estas columnas no se usaran.
 
 ```{r}
-datos <- select(datos, -Id, -PoolQC, -Fence, -Alley, -MiscFeature, -FireplaceQu) 
+datos <- select(datos, -Id, -PoolQC, -Fence, -Alley, -MiscFeature, -FireplaceQu)
 datos <- na.omit(datos)
 ```
 
 ### 1.2 Eliminación de variables no significativas
 
 ```{r}
-datos <- select(datos, -GarageYrBlt, -SaleType, -SaleCondition, -MoSold, -YrSold, -YearBuilt, -Condition2, -MSSubClass, MSZoning, -LotShape, -YearRemodAdd, -Exterior1st, -BsmtFinType1, -BsmtFinType2, -GarageQual, -GarageCond, -RoofMatl, -Condition1, -BsmtQual, - Exterior2nd, -RoofStyle, -GarageType)
+datos <- select(datos, -GarageYrBlt, -SaleType, -SaleCondition, -MoSold, -YrSold, -YearBuilt, -Condition2, -MSSubClass, MSZoning, -LotShape, -YearRemodAdd, -Exterior1st, -BsmtFinType1, -BsmtFinType2, -GarageQual, -GarageCond, -RoofMatl, -Condition1, -BsmtQual, -Exterior2nd, -RoofStyle, -GarageType)
 ```
 
 Se observaron diferentes variables que no aportaban al modelo, por lo tanto se decidió eliminarlas.
@@ -99,9 +99,9 @@ datosT$clasificacion <- as.factor(datosT$clasificacion)
 ```{r}
 library(fastDummies)
 datos_con_dummy <- dummy_cols(datosT, select_columns = c("clasificacion"))
-datos_con_dummy <- select(datos_con_dummy, -clasificacion, -clasificacion_Economicas, -clasificacion_Intermedias) 
+datos_con_dummy <- select(datos_con_dummy, -clasificacion, -clasificacion_Economicas, -clasificacion_Intermedias)
 datos_con_dummy$clasificacion_Caras <- datos_con_dummy$clasificacion_Caras
-datos_con_dummy<-datos_con_dummy %>% mutate_at(c("clasificacion_Caras"),as.factor)
+datos_con_dummy <- datos_con_dummy %>% mutate_at(c("clasificacion_Caras"), as.factor)
 ```
 
 ### 2. Datos de entrenamiento y prueba
@@ -123,8 +123,8 @@ test <- datos_num[-corte, ]
 
 ```{r warning=FALSE}
 Rprof(memory.profiling = TRUE)
-cv <- trainControl(method="cv", number=10)
-modelo_todas_cv <- caret::train(clasificacion_Caras~., data=train,method="glm", family = binomial, trControl = cv)
+cv <- trainControl(method = "cv", number = 10)
+modelo_todas_cv <- caret::train(clasificacion_Caras ~ ., data = train, method = "glm", family = binomial, trControl = cv)
 Rprof(NULL)
 pm1 <- summaryRprof(memory = "both")
 AIC1 <- AIC(modelo_todas_cv$finalModel)
@@ -177,25 +177,27 @@ Existe correlación entre las siguientes variables:
 -   GarageArea: OverallQual, TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, TotRmsAbvGrd, GarageCars
 
 ```{r prediccion_modelo_numericas}
-test_1 = select(test, -clasificacion_Caras)
-pred <- predict(modelo_todas_cv,newdata = test_1)
+test_1 <- select(test, -clasificacion_Caras)
+pred <- predict(modelo_todas_cv, newdata = test_1)
 ```
 
 ```{r}
-caret::confusionMatrix(as.factor(pred),as.factor(test$clasificacion_Caras))
+caret::confusionMatrix(as.factor(pred), as.factor(test$clasificacion_Caras))
 ```
 
 Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.87. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.
 
 ```{r curva_de_aprendizaje}
 # train <- train[, numeric_variables2]
-datos.task = makeClassifTask(data = train, target = "clasificacion_Caras")
-rin2 = makeResampleDesc(method = "CV", iters = 10, predict = "both")
-lrn = makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
-lc2 = generateLearningCurveData(learners = lrn, task = datos.task,
-                                percs = seq(0.1, 1, by = 0.1),
-                                measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
-                                show.info = FALSE)
+datos.task <- makeClassifTask(data = train, target = "clasificacion_Caras")
+rin2 <- makeResampleDesc(method = "CV", iters = 10, predict = "both")
+lrn <- makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
+lc2 <- generateLearningCurveData(
+    learners = lrn, task = datos.task,
+    percs = seq(0.1, 1, by = 0.1),
+    measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
+    show.info = FALSE
+)
 plotLearningCurve(lc2, facet = "learner")
 ```
 
@@ -221,8 +223,8 @@ test <- datos_num[-corte, ]
 
 ```{r warning=FALSE}
 Rprof(memory.profiling = TRUE)
-cv <- trainControl(method="cv", number=10)
-modelo_todas_cv <- caret::train(clasificacion_Caras~., data=train,method="glm", family = binomial, trControl = cv)
+cv <- trainControl(method = "cv", number = 10)
+modelo_todas_cv <- caret::train(clasificacion_Caras ~ ., data = train, method = "glm", family = binomial, trControl = cv)
 Rprof(NULL)
 pm2 <- summaryRprof(memory = "both")
 AIC2 <- AIC(modelo_todas_cv$finalModel)
@@ -249,24 +251,26 @@ Como se puede hay varias variables que son significativas para el modelo, con lo
 #### 3.2.2 Análisis de ajuste de modelo
 
 ```{r}
-test_1 = select(test, -clasificacion_Caras)
-pred <- predict(modelo_todas_cv,newdata = test_1)
+test_1 <- select(test, -clasificacion_Caras)
+pred <- predict(modelo_todas_cv, newdata = test_1)
 ```
 
 ```{r}
-cf1 <- caret::confusionMatrix(as.factor(pred),as.factor(test$clasificacion_Caras))
+cf1 <- caret::confusionMatrix(as.factor(pred), as.factor(test$clasificacion_Caras))
 ```
 
 Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.89. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.
 
 ```{r}
-datos.task = makeClassifTask(data = train, target = "clasificacion_Caras")
-rin2 = makeResampleDesc(method = "CV", iters = 10, predict = "both")
-lrn = makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
-lc2 = generateLearningCurveData(learners = lrn, task = datos.task,
-                                percs = seq(0.1, 1, by = 0.1),
-                                measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
-                                show.info = FALSE)
+datos.task <- makeClassifTask(data = train, target = "clasificacion_Caras")
+rin2 <- makeResampleDesc(method = "CV", iters = 10, predict = "both")
+lrn <- makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
+lc2 <- generateLearningCurveData(
+    learners = lrn, task = datos.task,
+    percs = seq(0.1, 1, by = 0.1),
+    measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
+    show.info = FALSE
+)
 plotLearningCurve(lc2, facet = "learner")
 ```
 
@@ -284,7 +288,7 @@ Luego de observar las variables significativas numéricas se utilizarán Overall
 porcentaje <- 0.7
 set.seed(123)
 
-variables_m1 <- c("OverallQual", "BsmtFinSF1", "BsmtUnfSF", "X2ndFlrSF", "BsmtFullBath", "FullBath", "PoolArea", "MiscVal","Neighborhood", "HouseStyle", "Heating", "Electrical", "KitchenQual", "LotConfig", "ExterCond", "clasificacion_Caras")
+variables_m1 <- c("OverallQual", "BsmtFinSF1", "BsmtUnfSF", "X2ndFlrSF", "BsmtFullBath", "FullBath", "PoolArea", "MiscVal", "Neighborhood", "HouseStyle", "Heating", "Electrical", "KitchenQual", "LotConfig", "ExterCond", "clasificacion_Caras")
 # datos_num <- select(datos_con_dummy, -SalePrice)
 # datos_num <- select(datos_con_dummy, -Utilities)
 datos_m1 <- datos_con_dummy[, variables_m1]
@@ -296,8 +300,8 @@ test <- datos_m1[-corte, ]
 
 ```{r warning=FALSE}
 Rprof(memory.profiling = TRUE)
-cv <- trainControl(method="cv", number=10)
-modelo_todas_cv <- caret::train(clasificacion_Caras~., data=train,method="glm", family = binomial, trControl = cv)
+cv <- trainControl(method = "cv", number = 10)
+modelo_todas_cv <- caret::train(clasificacion_Caras ~ ., data = train, method = "glm", family = binomial, trControl = cv)
 Rprof(NULL)
 pm3 <- summaryRprof(memory = "both")
 AIC3 <- AIC(modelo_todas_cv$finalModel)
@@ -312,25 +316,27 @@ print(model_summary, signif.stars = TRUE, digits = 3)
 #### 7.1.2 Análisis de ajuste de modelo
 
 ```{r}
-test_1 = select(test, -clasificacion_Caras)
-pred <- predict(modelo_todas_cv,newdata = test_1)
+test_1 <- select(test, -clasificacion_Caras)
+pred <- predict(modelo_todas_cv, newdata = test_1)
 ```
 
 ```{r}
-cf2 <- caret::confusionMatrix(as.factor(pred),as.factor(test$clasificacion_Caras))
+cf2 <- caret::confusionMatrix(as.factor(pred), as.factor(test$clasificacion_Caras))
 cf2
 ```
 
 Al observar el accuracy del modelo, se puede observar que es de 0.91, un valor muy bueno. Además, el modelo es bueno para la identificación de verdaderos positivos y es ligeramente menos preciso para la identificación de verdaderos negativos. Sin embargo, parece ser un bueno modelo. Su AIC, de 531.8, es relativamente bajo.
 
 ```{r}
-datos.task = makeClassifTask(data = train, target = "clasificacion_Caras")
-rin2 = makeResampleDesc(method = "CV", iters = 50, predict = "both")
-lrn = makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
-lc2 = generateLearningCurveData(learners = lrn, task = datos.task,
-                                percs = seq(0.1, 1, by = 0.1),
-                                measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
-                                show.info = FALSE)
+datos.task <- makeClassifTask(data = train, target = "clasificacion_Caras")
+rin2 <- makeResampleDesc(method = "CV", iters = 50, predict = "both")
+lrn <- makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
+lc2 <- generateLearningCurveData(
+    learners = lrn, task = datos.task,
+    percs = seq(0.1, 1, by = 0.1),
+    measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
+    show.info = FALSE
+)
 plotLearningCurve(lc2, facet = "learner")
 ```
 
@@ -354,7 +360,7 @@ datos_con_dummy2 <- dummy_cols(datos_con_dummy, select_columns = c("Neighborhood
 porcentaje <- 0.7
 set.seed(123)
 
-variables_m2 <- c("OverallQual", "BsmtFinSF1", "BsmtUnfSF", "X2ndFlrSF", "PoolArea", "MiscVal","Neighborhood_BrkSide", "Neighborhood_Crawfor", "HouseStyle_1Story", "HouseStyle_SFoyer", "LotConfig_CulDSac", "clasificacion_Caras")
+variables_m2 <- c("OverallQual", "BsmtFinSF1", "BsmtUnfSF", "X2ndFlrSF", "PoolArea", "MiscVal", "Neighborhood_BrkSide", "Neighborhood_Crawfor", "HouseStyle_1Story", "HouseStyle_SFoyer", "LotConfig_CulDSac", "clasificacion_Caras")
 datos_m2 <- datos_con_dummy2[, variables_m2]
 
 corte <- sample(nrow(datos_m2), nrow(datos_m2) * porcentaje)
@@ -364,8 +370,8 @@ test <- datos_m2[-corte, ]
 
 ```{r warning=FALSE}
 
-cv <- trainControl(method="cv", number=10)
-modelo_todas_cv <- caret::train(clasificacion_Caras~., data=train,method="glm", family = binomial, trControl = cv)
+cv <- trainControl(method = "cv", number = 10)
+modelo_todas_cv <- caret::train(clasificacion_Caras ~ ., data = train, method = "glm", family = binomial, trControl = cv)
 
 ```
 
@@ -377,25 +383,27 @@ print(model_summary, signif.stars = TRUE, digits = 3)
 #### 7.2.2 Análisis de ajuste de modelo
 
 ```{r}
-test_1 = select(test, -clasificacion_Caras)
-pred <- predict(modelo_todas_cv,newdata = test_1)
+test_1 <- select(test, -clasificacion_Caras)
+pred <- predict(modelo_todas_cv, newdata = test_1)
 ```
 
 ```{r}
-cf3 <- caret::confusionMatrix(as.factor(pred),as.factor(test$clasificacion_Caras))
+cf3 <- caret::confusionMatrix(as.factor(pred), as.factor(test$clasificacion_Caras))
 cf3
 ```
 
 Al observar el accuracy del modelo, se puede observar que es de 0.9, un valor muy bueno. Además, el modelo es bueno para la identificación de verdaderos positivos pero no lo es tanto para la identificación de valores verdaderamente falsos. Sin embargo, parece ser un bueno modelo. Su AIC, de 386.3, es relativamente bajo.
 
 ```{r}
-datos.task = makeClassifTask(data = train, target = "clasificacion_Caras")
-rin2 = makeResampleDesc(method = "CV", iters = 50, predict = "both")
-lrn = makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
-lc2 = generateLearningCurveData(learners = lrn, task = datos.task,
-                                percs = seq(0.1, 1, by = 0.1),
-                                measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
-                                show.info = FALSE)
+datos.task <- makeClassifTask(data = train, target = "clasificacion_Caras")
+rin2 <- makeResampleDesc(method = "CV", iters = 50, predict = "both")
+lrn <- makeLearner("classif.multinom", predict.type = "prob", trace = FALSE)
+lc2 <- generateLearningCurveData(
+    learners = lrn, task = datos.task,
+    percs = seq(0.1, 1, by = 0.1),
+    measures = list(ber, setAggregation(ber, train.mean)), resampling = rin2,
+    show.info = FALSE
+)
 plotLearningCurve(lc2, facet = "learner")
 ```
 
@@ -437,10 +445,48 @@ variables_models <- c("LotFrontage", "LotArea", "OverallQual", "OverallCond", "M
 ```
 
 #### 10.1 Árbol de decisión
+```{r }
+Rprof(memory.profiling = TRUE)
+modelo_arbol <- rpart(clasificacion_Caras ~ ., data = train, method = "class", maxdepth = 4)
+rpart.plot(modelo_arbol)
+Rprof(NULL)
+
+pm4 <- summaryRprof(memory = "both")
+
+y_pred <- predict(modelo_arbol, test, type = "class")
+confusionMatrix(y_pred, test$clasificacion_Caras)
+
+```
+
 
 #### 10.2 Random Forest
+```{r }
+Rprof(memory.profiling = TRUE)
+modeloRF <- randomForest(clasificacion_Caras ~ ., train, na.action = na.omit)
+Rprof(NULL)
+
+pm5 <- summaryRprof(memory = "both")
+ypred <- predict(modeloRF, newdata = test)
+ypred <- factor(ypred)
+
+confusionMatrix(ypred, test$clasificacion_Caras)
+```
+
 
 #### 10.3 Naive Bayes
+```{r }
+Rprof(memory.profiling = TRUE)
+modeloNB <- naiveBayes(clasificacion_Caras ~ ., train)
+Rprof(NULL)
 
+pm6 <- summaryRprof(memory = "both")
+ypred <- predict(modeloNB, newdata = test)
+ypred <- factor(ypred)
+
+confusionMatrix(ypred, test$clasificacion_Caras)
+```
 
 ### 11. Comparación de eficiencia entre modelos.
+
+Podemos observar que el modelo de Random Forest es el que mejor desempeño tuvo con un accuracy de 0.899. El modelo de Naive Bayes tuvo un accuracy de 0.805 y el modelo de Arbol de Clasificacion tuvo un accuracy de 0.866. El que más tardó fue el Random Forest con un tiempo de `r pm5$sampling.time`s. El arbol de Clasificacion tuvo la mayor cantidad de falsos positivos con un total de 37, mientras que el Random Fores tuvo la mayor cantidad de falsos negativos con un total de 95. El modelo que menos se equivocó fue el Random Forest, cosa que se puede observar tanto en la matriz de confusión como en el accuracy.  
+Como se puede obserevar el que mejor accuracy tuvo y el que tuvo mejor desempeño sobre los otros fue también el que más se tardó, indicando que es un modelo más robusto y que se ajusta mejor a las variables que se están utilizando para predecir.

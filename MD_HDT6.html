@@ -179,14 +179,14 @@ SaleCondition
 </div>
 <p>Se puede observar que PoolQC tiene demasiados datos faltantes, al igual que Fence, Alley, MiscFeature y FireplaceQu. Por lo tanto estas columnas no se usaran.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">select</span>(datos, <span class="sc">-</span>Id, <span class="sc">-</span>PoolQC, <span class="sc">-</span>Fence, <span class="sc">-</span>Alley, <span class="sc">-</span>MiscFeature, <span class="sc">-</span>FireplaceQu) </span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">select</span>(datos, <span class="sc">-</span>Id, <span class="sc">-</span>PoolQC, <span class="sc">-</span>Fence, <span class="sc">-</span>Alley, <span class="sc">-</span>MiscFeature, <span class="sc">-</span>FireplaceQu)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(datos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="eliminación-de-variables-no-significativas" class="level3">
 <h3 class="anchored" data-anchor-id="eliminación-de-variables-no-significativas">1.2 Eliminación de variables no significativas</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">select</span>(datos, <span class="sc">-</span>GarageYrBlt, <span class="sc">-</span>SaleType, <span class="sc">-</span>SaleCondition, <span class="sc">-</span>MoSold, <span class="sc">-</span>YrSold, <span class="sc">-</span>YearBuilt, <span class="sc">-</span>Condition2, <span class="sc">-</span>MSSubClass, MSZoning, <span class="sc">-</span>LotShape, <span class="sc">-</span>YearRemodAdd, <span class="sc">-</span>Exterior1st, <span class="sc">-</span>BsmtFinType1, <span class="sc">-</span>BsmtFinType2, <span class="sc">-</span>GarageQual, <span class="sc">-</span>GarageCond, <span class="sc">-</span>RoofMatl, <span class="sc">-</span>Condition1, <span class="sc">-</span>BsmtQual, <span class="sc">-</span> Exterior2nd, <span class="sc">-</span>RoofStyle, <span class="sc">-</span>GarageType)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">select</span>(datos, <span class="sc">-</span>GarageYrBlt, <span class="sc">-</span>SaleType, <span class="sc">-</span>SaleCondition, <span class="sc">-</span>MoSold, <span class="sc">-</span>YrSold, <span class="sc">-</span>YearBuilt, <span class="sc">-</span>Condition2, <span class="sc">-</span>MSSubClass, MSZoning, <span class="sc">-</span>LotShape, <span class="sc">-</span>YearRemodAdd, <span class="sc">-</span>Exterior1st, <span class="sc">-</span>BsmtFinType1, <span class="sc">-</span>BsmtFinType2, <span class="sc">-</span>GarageQual, <span class="sc">-</span>GarageCond, <span class="sc">-</span>RoofMatl, <span class="sc">-</span>Condition1, <span class="sc">-</span>BsmtQual, <span class="sc">-</span>Exterior2nd, <span class="sc">-</span>RoofStyle, <span class="sc">-</span>GarageType)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Se observaron diferentes variables que no aportaban al modelo, por lo tanto se decidió eliminarlas.</p>
 </section>
@@ -211,9 +211,9 @@ SaleCondition
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fastDummies)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>datos_con_dummy <span class="ot">&lt;-</span> <span class="fu">dummy_cols</span>(datosT, <span class="at">select_columns =</span> <span class="fu">c</span>(<span class="st">"clasificacion"</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>datos_con_dummy <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>clasificacion, <span class="sc">-</span>clasificacion_Economicas, <span class="sc">-</span>clasificacion_Intermedias) </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>datos_con_dummy <span class="ot">&lt;-</span> <span class="fu">select</span>(datos_con_dummy, <span class="sc">-</span>clasificacion, <span class="sc">-</span>clasificacion_Economicas, <span class="sc">-</span>clasificacion_Intermedias)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>datos_con_dummy<span class="sc">$</span>clasificacion_Caras <span class="ot">&lt;-</span> datos_con_dummy<span class="sc">$</span>clasificacion_Caras</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>datos_con_dummy<span class="ot">&lt;-</span>datos_con_dummy <span class="sc">%&gt;%</span> <span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">"clasificacion_Caras"</span>),as.factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>datos_con_dummy <span class="ot">&lt;-</span> datos_con_dummy <span class="sc">%&gt;%</span> <span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">"clasificacion_Caras"</span>), as.factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="datos-de-entrenamiento-y-prueba" class="level3">
@@ -236,8 +236,8 @@ SaleCondition
 <h3 class="anchored" data-anchor-id="modelo-con-todas-las-variables.">3.1 Modelo con todas las variables.</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>, <span class="at">number =</span> <span class="dv">10</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>pm1 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>AIC1 <span class="ot">&lt;-</span> <span class="fu">AIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span>
@@ -436,15 +436,15 @@ Number of Fisher Scoring iterations: 25</code></pre>
 <li>GarageArea: OverallQual, TotalBsmtSF, X1stFlrSF, GrLivArea, FullBath, TotRmsAbvGrd, GarageCars</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">&lt;-</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv, <span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred), <span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
 
@@ -478,19 +478,21 @@ Prediction   0   1
 <p>Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.87. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train &lt;- train[, numeric_variables2]</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">&lt;-</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in makeTask(type = type, data = data, weights = weights,
 blocking = blocking, : Empty factor levels were dropped for columns:
 ExterCond,Foundation,Heating,Functional</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">&lt;-</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">&lt;-</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">&lt;-</span> <span class="fu">generateLearningCurveData</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.info =</span> <span class="cn">FALSE</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="MD_HDT6_files/figure-html/curva_de_aprendizaje-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -517,8 +519,8 @@ ExterCond,Foundation,Heating,Functional</code></pre>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>, <span class="at">number =</span> <span class="dv">10</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>pm2 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>AIC2 <span class="ot">&lt;-</span> <span class="fu">AIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span>
@@ -595,26 +597,28 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <section id="análisis-de-ajuste-de-modelo" class="level4">
 <h4 class="anchored" data-anchor-id="análisis-de-ajuste-de-modelo">3.2.2 Análisis de ajuste de modelo</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">&lt;-</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv, <span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>cf1 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>cf1 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred), <span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Parece ser que se tiene un buen modelo porque se tiene un accuracy de 0.89. La sensitividad y especificidad son buenas, de 0.89 y 0.83 respectivamente. Algo importante que se debe mencionar es que AIC es bastante alto, de 2717. Como se indicó, el modelo parece ajustarse bien a los datos, pero es necesario analizar el overfitting.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">&lt;-</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">&lt;-</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">10</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">&lt;-</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">&lt;-</span> <span class="fu">generateLearningCurveData</span>(</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.info =</span> <span class="cn">FALSE</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="MD_HDT6_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -634,7 +638,7 @@ prediction from a rank-deficient fit may be misleading</code></pre>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>variables_m1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>,<span class="st">"Neighborhood"</span>, <span class="st">"HouseStyle"</span>, <span class="st">"Heating"</span>, <span class="st">"Electrical"</span>, <span class="st">"KitchenQual"</span>, <span class="st">"LotConfig"</span>, <span class="st">"ExterCond"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>variables_m1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"BsmtFullBath"</span>, <span class="st">"FullBath"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>, <span class="st">"Neighborhood"</span>, <span class="st">"HouseStyle"</span>, <span class="st">"Heating"</span>, <span class="st">"Electrical"</span>, <span class="st">"KitchenQual"</span>, <span class="st">"LotConfig"</span>, <span class="st">"ExterCond"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -SalePrice)</span></span>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="co"># datos_num &lt;- select(datos_con_dummy, -Utilities)</span></span>
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>datos_m1 <span class="ot">&lt;-</span> datos_con_dummy[, variables_m1]</span>
@@ -645,8 +649,8 @@ prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>, <span class="at">number =</span> <span class="dv">10</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>pm3 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>AIC3 <span class="ot">&lt;-</span> <span class="fu">AIC</span>(modelo_todas_cv<span class="sc">$</span>finalModel)</span>
@@ -742,15 +746,15 @@ Number of Fisher Scoring iterations: 25</code></pre>
 <section id="análisis-de-ajuste-de-modelo-1" class="level4">
 <h4 class="anchored" data-anchor-id="análisis-de-ajuste-de-modelo-1">7.1.2 Análisis de ajuste de modelo</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">&lt;-</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv, <span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 prediction from a rank-deficient fit may be misleading</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>cf2 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>cf2 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred), <span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>cf2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
@@ -784,18 +788,20 @@ Prediction   0   1
 </div>
 <p>Al observar el accuracy del modelo, se puede observar que es de 0.91, un valor muy bueno. Además, el modelo es bueno para la identificación de verdaderos positivos y es ligeramente menos preciso para la identificación de verdaderos negativos. Sin embargo, parece ser un bueno modelo. Su AIC, de 531.8, es relativamente bajo.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">&lt;-</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in makeTask(type = type, data = data, weights = weights, blocking =
 blocking, : Empty factor levels were dropped for columns: Heating,ExterCond</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">50</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">&lt;-</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">50</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">&lt;-</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">&lt;-</span> <span class="fu">generateLearningCurveData</span>(</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.info =</span> <span class="cn">FALSE</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="MD_HDT6_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -817,7 +823,7 @@ blocking, : Empty factor levels were dropped for columns: Heating,ExterCond</cod
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>porcentaje <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>variables_m2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>,<span class="st">"Neighborhood_BrkSide"</span>, <span class="st">"Neighborhood_Crawfor"</span>, <span class="st">"HouseStyle_1Story"</span>, <span class="st">"HouseStyle_SFoyer"</span>, <span class="st">"LotConfig_CulDSac"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>variables_m2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"OverallQual"</span>, <span class="st">"BsmtFinSF1"</span>, <span class="st">"BsmtUnfSF"</span>, <span class="st">"X2ndFlrSF"</span>, <span class="st">"PoolArea"</span>, <span class="st">"MiscVal"</span>, <span class="st">"Neighborhood_BrkSide"</span>, <span class="st">"Neighborhood_Crawfor"</span>, <span class="st">"HouseStyle_1Story"</span>, <span class="st">"HouseStyle_SFoyer"</span>, <span class="st">"LotConfig_CulDSac"</span>, <span class="st">"clasificacion_Caras"</span>)</span>
 <span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>datos_m2 <span class="ot">&lt;-</span> datos_con_dummy2[, variables_m2]</span>
 <span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>corte <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(datos_m2), <span class="fu">nrow</span>(datos_m2) <span class="sc">*</span> porcentaje)</span>
@@ -825,8 +831,8 @@ blocking, : Empty factor levels were dropped for columns: Heating,ExterCond</cod
 <span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos_m2[<span class="sc">-</span>corte, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"cv"</span>, <span class="at">number=</span><span class="dv">10</span>)</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras<span class="sc">~</span>., <span class="at">data=</span>train,<span class="at">method=</span><span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"cv"</span>, <span class="at">number =</span> <span class="dv">10</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>modelo_todas_cv <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(clasificacion_Caras <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"glm"</span>, <span class="at">family =</span> binomial, <span class="at">trControl =</span> cv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(modelo_todas_cv)</span>
@@ -870,11 +876,11 @@ Number of Fisher Scoring iterations: 7</code></pre>
 <section id="análisis-de-ajuste-de-modelo-2" class="level4">
 <h4 class="anchored" data-anchor-id="análisis-de-ajuste-de-modelo-2">7.2.2 Análisis de ajuste de modelo</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">=</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv,<span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>test_1 <span class="ot">&lt;-</span> <span class="fu">select</span>(test, <span class="sc">-</span>clasificacion_Caras)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_todas_cv, <span class="at">newdata =</span> test_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>cf3 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred),<span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>cf3 <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred), <span class="fu">as.factor</span>(test<span class="sc">$</span>clasificacion_Caras))</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>cf3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Confusion Matrix and Statistics
@@ -908,14 +914,16 @@ Prediction   0   1
 </div>
 <p>Al observar el accuracy del modelo, se puede observar que es de 0.9, un valor muy bueno. Además, el modelo es bueno para la identificación de verdaderos positivos pero no lo es tanto para la identificación de valores verdaderamente falsos. Sin embargo, parece ser un bueno modelo. Su AIC, de 386.3, es relativamente bajo.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">=</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">=</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">50</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">=</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">=</span> <span class="fu">generateLearningCurveData</span>(<span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                                <span class="at">show.info =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>datos.task <span class="ot">&lt;-</span> <span class="fu">makeClassifTask</span>(<span class="at">data =</span> train, <span class="at">target =</span> <span class="st">"clasificacion_Caras"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>rin2 <span class="ot">&lt;-</span> <span class="fu">makeResampleDesc</span>(<span class="at">method =</span> <span class="st">"CV"</span>, <span class="at">iters =</span> <span class="dv">50</span>, <span class="at">predict =</span> <span class="st">"both"</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>lrn <span class="ot">&lt;-</span> <span class="fu">makeLearner</span>(<span class="st">"classif.multinom"</span>, <span class="at">predict.type =</span> <span class="st">"prob"</span>, <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>lc2 <span class="ot">&lt;-</span> <span class="fu">generateLearningCurveData</span>(</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">learners =</span> lrn, <span class="at">task =</span> datos.task,</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">percs =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>),</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">measures =</span> <span class="fu">list</span>(ber, <span class="fu">setAggregation</span>(ber, train.mean)), <span class="at">resampling =</span> rin2,</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.info =</span> <span class="cn">FALSE</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plotLearningCurve</span>(lc2, <span class="at">facet =</span> <span class="st">"learner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="MD_HDT6_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -1025,7 +1033,7 @@ Prediction   0   1
 </div>
 </div>
 <p>El primer modelo obtuvo un accuracy de 0.93, con un buen valor de specificity y sensitivity. Sin embargo, tenía overfitting. El segundo modelo tuvo un accuracy de 0.91. Fue bueno para verdaderos positivos y un poco menos para verdaderos negativos. El tercer modelo tuvo el peor accuracy, de 0.9. Su sensitivity fue buena, de 0.94, por lo que es bueno para verdaderos positivos pero su specificity no fue muy buena, de 0.82.</p>
-<p>Por otra parte, para el primer modelo su velocidad fue de 1.88 ms y su consumo de memoria 1.93787^{4} MB. Para el segundo modelo, 0.16 ms y 3642.8 MB. Para el tercer modelo 0.54 ms y 1.06573^{4} MB.</p>
+<p>Por otra parte, para el primer modelo su velocidad fue de 2.8 ms y su consumo de memoria 2.29754^{4} MB. Para el segundo modelo, 0.32 ms y 5801.4 MB. Para el tercer modelo 0.98 ms y 1.24336^{4} MB.</p>
 </section>
 <section id="determinación-de-que-modelo-es-mejor." class="level3">
 <h3 class="anchored" data-anchor-id="determinación-de-que-modelo-es-mejor.">9. Determinación de que modelo es mejor.</h3>
@@ -1040,16 +1048,141 @@ Prediction   0   1
 </div>
 <section id="árbol-de-decisión" class="level4">
 <h4 class="anchored" data-anchor-id="árbol-de-decisión">10.1 Árbol de decisión</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>modelo_arbol <span class="ot">&lt;-</span> <span class="fu">rpart</span>(clasificacion_Caras <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"class"</span>, <span class="at">maxdepth =</span> <span class="dv">4</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(modelo_arbol)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="MD_HDT6_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>pm4 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>y_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_arbol, test, <span class="at">type =</span> <span class="st">"class"</span>)</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(y_pred, test<span class="sc">$</span>clasificacion_Caras)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 211  37
+         1   7  74
+                                          
+               Accuracy : 0.8663          
+                 95% CI : (0.8246, 0.9011)
+    No Information Rate : 0.6626          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.6796          
+                                          
+ Mcnemar's Test P-Value : 1.232e-05       
+                                          
+            Sensitivity : 0.9679          
+            Specificity : 0.6667          
+         Pos Pred Value : 0.8508          
+         Neg Pred Value : 0.9136          
+             Prevalence : 0.6626          
+         Detection Rate : 0.6413          
+   Detection Prevalence : 0.7538          
+      Balanced Accuracy : 0.8173          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
 </section>
 <section id="random-forest" class="level4">
 <h4 class="anchored" data-anchor-id="random-forest">10.2 Random Forest</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>modeloRF <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(clasificacion_Caras <span class="sc">~</span> ., train, <span class="at">na.action =</span> na.omit)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>pm5 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modeloRF, <span class="at">newdata =</span> test)</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">factor</span>(ypred)</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(ypred, test<span class="sc">$</span>clasificacion_Caras)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 201  16
+         1  17  95
+                                         
+               Accuracy : 0.8997         
+                 95% CI : (0.862, 0.9299)
+    No Information Rate : 0.6626         
+    P-Value [Acc &gt; NIR] : &lt;2e-16         
+                                         
+                  Kappa : 0.7762         
+                                         
+ Mcnemar's Test P-Value : 1              
+                                         
+            Sensitivity : 0.9220         
+            Specificity : 0.8559         
+         Pos Pred Value : 0.9263         
+         Neg Pred Value : 0.8482         
+             Prevalence : 0.6626         
+         Detection Rate : 0.6109         
+   Detection Prevalence : 0.6596         
+      Balanced Accuracy : 0.8889         
+                                         
+       'Positive' Class : 0              
+                                         </code></pre>
+</div>
+</div>
 </section>
 <section id="naive-bayes" class="level4">
 <h4 class="anchored" data-anchor-id="naive-bayes">10.3 Naive Bayes</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="at">memory.profiling =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>modeloNB <span class="ot">&lt;-</span> <span class="fu">naiveBayes</span>(clasificacion_Caras <span class="sc">~</span> ., train)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Rprof</span>(<span class="cn">NULL</span>)</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>pm6 <span class="ot">&lt;-</span> <span class="fu">summaryRprof</span>(<span class="at">memory =</span> <span class="st">"both"</span>)</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">predict</span>(modeloNB, <span class="at">newdata =</span> test)</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>ypred <span class="ot">&lt;-</span> <span class="fu">factor</span>(ypred)</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(ypred, test<span class="sc">$</span>clasificacion_Caras)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 171  17
+         1  47  94
+                                          
+               Accuracy : 0.8055          
+                 95% CI : (0.7585, 0.8468)
+    No Information Rate : 0.6626          
+    P-Value [Acc &gt; NIR] : 7.107e-09       
+                                          
+                  Kappa : 0.592           
+                                          
+ Mcnemar's Test P-Value : 0.000289        
+                                          
+            Sensitivity : 0.7844          
+            Specificity : 0.8468          
+         Pos Pred Value : 0.9096          
+         Neg Pred Value : 0.6667          
+             Prevalence : 0.6626          
+         Detection Rate : 0.5198          
+   Detection Prevalence : 0.5714          
+      Balanced Accuracy : 0.8156          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="comparación-de-eficiencia-entre-modelos." class="level3">
 <h3 class="anchored" data-anchor-id="comparación-de-eficiencia-entre-modelos.">11. Comparación de eficiencia entre modelos.</h3>
+<p>Podemos observar que el modelo de Random Forest es el que mejor desempeño tuvo con un accuracy de 0.899. El modelo de Naive Bayes tuvo un accuracy de 0.84 y el modelo de Arbol de Clasificacion tuvo un accuracy de 0.806. El que más tardó fue el Random Forest con un tiempo de 0.48. El arbol de Clasificacion tuvo la mayor cantidad de falsos positivos con un total de 37, mientras que el Naive Bayes tuvo la mayor cantidad de falsos negativos con un total de 35. El modelo que menos se equivocó fue el Random Forest, cosa que se puede observar tanto en la matriz de confusión como en el accuracy.<br>
+Como se puede obserevar el que mejor accuracy tuvo y el que tuvo mejor desempeño sobre los otros fue también el que más se tardó, indicando que es un modelo más robusto y que se ajusta mejor a las variables que se están utilizando para predecir.</p>
 </section>
 </section>
 
