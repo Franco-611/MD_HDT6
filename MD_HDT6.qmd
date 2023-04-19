@@ -294,14 +294,14 @@ variables_m1 <- c("OverallQual", "BsmtFinSF1", "BsmtUnfSF", "X2ndFlrSF", "BsmtFu
 datos_m1 <- datos_con_dummy[, variables_m1]
 
 corte <- sample(nrow(datos_m1), nrow(datos_m1) * porcentaje)
-train <- datos_m1[corte, ]
-test <- datos_m1[-corte, ]
+train_f <- datos_m1[corte, ]
+test_f <- datos_m1[-corte, ]
 ```
 
 ```{r warning=FALSE}
 Rprof(memory.profiling = TRUE)
 cv <- trainControl(method = "cv", number = 10)
-modelo_todas_cv <- caret::train(clasificacion_Caras ~ ., data = train, method = "glm", family = binomial, trControl = cv)
+modelo_todas_cv <- caret::train(clasificacion_Caras ~ ., data = train_f, method = "glm", family = binomial, trControl = cv)
 Rprof(NULL)
 pm3 <- summaryRprof(memory = "both")
 AIC3 <- AIC(modelo_todas_cv$finalModel)
@@ -316,8 +316,8 @@ print(model_summary, signif.stars = TRUE, digits = 3)
 #### 7.1.2 Análisis de ajuste de modelo
 
 ```{r}
-test_1 <- select(test, -clasificacion_Caras)
-pred <- predict(modelo_todas_cv, newdata = test_1)
+test_1f <- select(test_f, -clasificacion_Caras)
+pred <- predict(modelo_todas_cv, newdata = test_1f)
 ```
 
 ```{r}
@@ -439,54 +439,57 @@ Se puede determinar que el segundo modelo es el mejor. Por un lado, se evidenci�
 
 ### 10. Creación de otros modelos adicionales.
 
-```{r}
-# USEN ESTAS VARIABLES PARA PREDECIR EN LOS MODELOS
-variables_models <- c("LotFrontage", "LotArea", "OverallQual", "OverallCond", "MasVnrArea", "BsmtFinSF1", "BsmtFinSF2", "BsmtUnfSF", "TotalBsmtSF", "X1stFlrSF", "X2ndFlrSF", "LowQualFinSF", "GrLivArea", "BsmtFullBath", "BsmtHalfBath", "FullBath", "HalfBath", "BedroomAbvGr", "KitchenAbvGr", "TotRmsAbvGrd", "Fireplaces", "GarageCars", "GarageArea", "WoodDeckSF", "OpenPorchSF", "EnclosedPorch", "X3SsnPorch", "ScreenPorch", "PoolArea", "MiscVal", "clasificacion_Caras")
-```
+Se usaron el train y test del mejor modelo anterior, que fue el segundo.
 
 #### 10.1 Árbol de decisión
 ```{r }
 Rprof(memory.profiling = TRUE)
-modelo_arbol <- rpart(clasificacion_Caras ~ ., data = train, method = "class", maxdepth = 4)
+modelo_arbol <- rpart(clasificacion_Caras ~ ., data = train_f, method = "class", maxdepth = 4)
 rpart.plot(modelo_arbol)
 Rprof(NULL)
 
 pm4 <- summaryRprof(memory = "both")
 
-y_pred <- predict(modelo_arbol, test, type = "class")
+y_pred <- predict(modelo_arbol, test_f, type = "class")
 confusionMatrix(y_pred, test$clasificacion_Caras)
-
+pm4$sampling.time
 ```
 
 
 #### 10.2 Random Forest
 ```{r }
 Rprof(memory.profiling = TRUE)
-modeloRF <- randomForest(clasificacion_Caras ~ ., train, na.action = na.omit)
+modeloRF <- randomForest(clasificacion_Caras ~ ., train_f, na.action = na.omit)
 Rprof(NULL)
 
 pm5 <- summaryRprof(memory = "both")
-ypred <- predict(modeloRF, newdata = test)
+ypred <- predict(modeloRF, newdata = test_f)
 ypred <- factor(ypred)
 
 confusionMatrix(ypred, test$clasificacion_Caras)
+pm5$sampling.time
 ```
 
 
 #### 10.3 Naive Bayes
 ```{r }
 Rprof(memory.profiling = TRUE)
-modeloNB <- naiveBayes(clasificacion_Caras ~ ., train)
+modeloNB <- naiveBayes(clasificacion_Caras ~ ., train_f)
 Rprof(NULL)
 
 pm6 <- summaryRprof(memory = "both")
-ypred <- predict(modeloNB, newdata = test)
+ypred <- predict(modeloNB, newdata = test_f)
 ypred <- factor(ypred)
 
 confusionMatrix(ypred, test$clasificacion_Caras)
+pm6$sampling.time
 ```
 
 ### 11. Comparación de eficiencia entre modelos.
 
-Podemos observar que el modelo de Random Forest es el que mejor desempeño tuvo con un accuracy de 0.899. El modelo de Naive Bayes tuvo un accuracy de 0.805 y el modelo de Arbol de Clasificacion tuvo un accuracy de 0.866. El que más tardó fue el Random Forest con un tiempo de `r pm5$sampling.time`s. El arbol de Clasificacion tuvo la mayor cantidad de falsos positivos con un total de 37, mientras que el Random Fores tuvo la mayor cantidad de falsos negativos con un total de 95. El modelo que menos se equivocó fue el Random Forest, cosa que se puede observar tanto en la matriz de confusión como en el accuracy.  
-Como se puede obserevar el que mejor accuracy tuvo y el que tuvo mejor desempeño sobre los otros fue también el que más se tardó, indicando que es un modelo más robusto y que se ajusta mejor a las variables que se están utilizando para predecir.
+Podemos observar que el modelo de Random Forest es el que mejor desempeño tuvo con un accuracy de 0.921. El modelo de Naive Bayes tuvo un accuracy de 0.87 y el modelo de Arbol de Clasificacion tuvo un accuracy de 0.88. El que más tardó fue el Random Forest con un tiempo de `r pm5$sampling.time` ms. El árbol de clasificación tuvo la mayor cantidad de falsos positivos con un total de 37, mientras que el Random Fores tuvo la mayor cantidad de falsos negativos con un total de 95. El modelo que menos se equivocó fue el Random Forest, cosa que se puede observar tanto en la matriz de confusión como en el accuracy.  
+
+El random forest fue el que mejor se desempeñó en la identificación de verdaderos positivos, mientras en Naive Bayes fue el que mejor identificó verdaderos negativos. Este último también fue el que peor desempeño tuvo al momento de identificar verdaderos positivos y el árbol de clasificación fue el que peor identificó verdaderos negativos.
+Es posible que el random forest haya sido el que menos se equivicó en verdaderos positivos y no tuvo mal desempeño en verdaderos negativos, además de tener la mejor accuracy, por su unión de múltiples árboles que mejoran su habilidad para predicciones. El árbol de decisión no fue el mejor por ser un modelo más simple.
+
+Como se puede observar el que mejor accuracy tuvo y el que tuvo mejor desempeño sobre los otros fue también el que más se tardó, indicando que es un modelo más robusto y que se ajusta mejor a las variables que se están utilizando para predecir.
